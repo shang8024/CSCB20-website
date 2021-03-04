@@ -1,1 +1,0 @@
-As a student user, the student should be able to see all the sections clearly at the home page.
