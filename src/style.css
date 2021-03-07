@@ -1,0 +1,31 @@
+body {
+	background-color: #FFFFFF;
+	color: #000000;
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+}
+
+.heading {
+	color : #FFFFFF;
+	background-color: #003366;
+	position: absolute;
+	height: 50px;
+	width: 840px;
+	top : 0px;
+	left: 165px;
+	padding: 10px;
+	font-variant: normal;
+	text-align: center;
+	vertical-align: middle;
+	font-size: x-large;
+	font-weight: bold;
+	font-style: oblique;
+}
+
+.footer {
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    border-top: 5px solid #79bcde;
+    padding-top: 1%;
+}
