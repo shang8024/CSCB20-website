@@ -21,11 +21,18 @@ body {
 	font-style: oblique;
 }
 
-.footer {
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
+
+#footer{
+	padding:30px;
+	text-align:center;
     border-top: 5px solid #79bcde;
     padding-top: 1%;
+}
+#footer a{
+	text-decoration: none;
+	transition: 0.4s;
+  }
+  
+#footer a:hover{
+	color: #396;
 }
