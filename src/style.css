@@ -1,31 +1,38 @@
-body {
-	background-color: #FFFFFF;
-	color: #000000;
-	font-family: Geneva, Arial, Helvetica, sans-serif;
-}
+body {margin:0;}
 
-.heading {
-	color : #FFFFFF;
-	background-color: #003366;
-	position: absolute;
-	height: 50px;
-	width: 840px;
-	top : 0px;
-	left: 165px;
-	padding: 10px;
-	font-variant: normal;
+nav {
+	overflow: hidden;
+	background-color: #333;
+	position: fixed;
+	top: 0;
+	width: 100%;
+  }
+nav .title{
+	  float: left;
+	  display: block;
+}
+nav .title a{
+	background: #354B61 ;
+}
+nav a {
+	float: right;
+	display: block;
+	color: #f2f2f2;
 	text-align: center;
-	vertical-align: middle;
-	font-size: x-large;
-	font-weight: bold;
-	font-style: oblique;
+	padding: 14px 16px;
+	text-decoration: none;
+	font-size: 17px;
 }
-
+  
+nav a:hover {
+	background: #ddd;
+	color: black;
+}
 
 #footer{
-	padding:30px;
+	padding:10px;
 	text-align:center;
-    border-top: 5px solid #79bcde;
+    border-top: 5px solid #354B61;
     padding-top: 1%;
 }
 #footer a{
@@ -35,4 +42,20 @@ body {
   
 #footer a:hover{
 	color: #396;
+}ansition: color 0.15s ease-in;
 }
+
+/* Offset for anchor tags accounting for fixed menu height */
+.anchor {
+	display: block;
+	height: 60px;
+	margin-top: -60px; 
+  	visibility: hidden;
+}
+
+.main {
+	padding: 16px;
+	margin-top: 30px;
+	height: 1500px; /* Used in this example to enable scrolling */
+  }
+
