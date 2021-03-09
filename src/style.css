@@ -1,32 +1,65 @@
 body {margin:0;}
 
-nav {
-	overflow: hidden;
-	background-color: #333;
+ul.topnav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    background-color: #333;
 	position: fixed;
-	top: 0;
 	width: 100%;
-  }
-nav .title{
-	  float: left;
-	  display: block;
+	top:0;
 }
-nav .title a{
-	background: #354B61 ;
+
+ul.topnav li {float: left;}
+
+ul.topnav li a{
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
 }
-nav a {
-	float: right;
-	display: block;
-	color: #f2f2f2;
-	text-align: center;
-	padding: 14px 16px;
-	text-decoration: none;
-	font-size: 17px;
+ul.topnav li .dropdown-content a{
+    display: block;
+    color: sienna;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
 }
-  
-nav a:hover {
-	background: #ddd;
+ul.topnav li a.active {background-color: #4CAF50;}
+
+ul.topnav li a:hover{
+	background-color: #ddd;
 	color: black;
+}
+
+ul.topnav li.right-title {float: right;}
+
+li a, .dropbtn {
+    display: inline-block;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.dropdown {
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+	color: black;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+.dropdown:hover .dropdown-content {
+    display: block;
 }
 
 #footer{
@@ -42,7 +75,6 @@ nav a:hover {
   
 #footer a:hover{
 	color: #396;
-}ansition: color 0.15s ease-in;
 }
 
 /* Offset for anchor tags accounting for fixed menu height */
@@ -58,4 +90,6 @@ nav a:hover {
 	margin-top: 30px;
 	height: 1500px; /* Used in this example to enable scrolling */
   }
-
+@media screen and (max-width: 600px){
+    ul.topnav li.right-title, ul.topnav li {float: none;}
+}
