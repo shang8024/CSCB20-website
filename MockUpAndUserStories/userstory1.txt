@@ -1,1 +1,1 @@
-As a student user, the student should be able to see all the sections clearly at the home page.
+As a mobile user, the user should see a different header (a clickable dropdown menu with all menu options) on mobile devices compared to the original header (plain navigation bar) on PC.  
