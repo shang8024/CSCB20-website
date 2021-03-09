@@ -9,25 +9,31 @@ rel="stylesheet">
 </head>
 
 <body>
-  <ul class="topnav">
-    <li class="right-title"><a><strong>CSCB63</strong>-Design and Analysis of Data Structures</a></li>
-    <li><a class="active" href="index.html#top">Home</a></li>
-    <li><a href="https://piazza.com/mail.utoronto.ca/winter2020/cscb63/home">Piazza</a></li>
-    <li class="dropdown">
-      <a href="#" class="dropbtn">Course Materials</a>
-      <div class="dropdown-content">
-        <a href="#">Lecture</a>
-        <a href="#">Assignment</a>
-        <a href="#">Labs</a>
-        <a href="#">Tests</a>
-        <a href="syllabus.pdf">Syllabus</a>
-      </div>
-    </li>
-    <li><a href="https://markus.utsc.utoronto.ca/cscb63w21">Markus</a></li>
-    <li><a href="https://forms.gle/Yx9QvFgNuEvaJMfy9">FeedBack</a></li>
-    <li><a href="#course-team">Course Team</a></li>
-    
-  </ul>
+  <nav>
+    <div id="menu-title"><strong>CSCB63</strong> - Design and Analysis of Data Structures</div>
+    <label for="drop" class="toggle">Menu</label>
+    <input type="checkbox" id="drop" />
+        <ul class="menu">
+            <li><a href="index.html#top">Home</a></li>
+            <li><a href="https://piazza.com/mail.utoronto.ca/winter2020/cscb63/home">Piazza</a></li>
+            <li>
+                <!-- First Tier Drop Down -->
+                <label for="drop-1" class="toggle">Course Materials</label>
+                <a>Course Materials</a>
+                <input type="checkbox" id="drop-1"/>
+                <ul>
+                    <li><a href="#">Lecture</a></li>
+                    <li><a href="#">Assignments</a></li>
+                    <li><a href="#">Tests</a></li>
+                    <li><a href="syllabus.pdf">Syllabus</a></li>
+                </ul> 
+            </li>
+            <li><a href="#">Labs</a></li>
+            <li><a href="https://markus.utsc.utoronto.ca/cscb63w21">Markus</a></li>
+            <li><a href="index.html#course-team">Course Team</a></li>
+            <li><a href="https://forms.gle/Yx9QvFgNuEvaJMfy9">FeedBack</a></li>
+        </ul>
+    </nav>
 
 <div
 class="main"> 
