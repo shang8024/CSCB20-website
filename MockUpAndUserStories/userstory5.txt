@@ -1,0 +1,1 @@
+As a student user, the student should be able to achieve the specific lecture file (in pdf or ppt, the lecture recording) from the "lecture material" section of a corresponding lecture when clicking on the "lecture" page.
