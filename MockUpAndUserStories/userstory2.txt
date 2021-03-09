@@ -1,1 +1,1 @@
-As a student user, the student should see that the header is always sticky on the top of the page whenever the user rolls up or down the page.
+As a mobile user, the user should see a different header (a clickable dropdown menu with all menu options) on mobile devices compared to the original header (plain navigation bar) on PC.
