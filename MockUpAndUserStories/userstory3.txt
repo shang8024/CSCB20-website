@@ -1,0 +1,1 @@
+As a student user, the student should see the specific time and detailed information (coverage, zoom links, etc.) of all the quizzes, exams when clicking on the "Tests" button under "Course Materials."
