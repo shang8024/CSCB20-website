@@ -1,0 +1,1 @@
+As a student user, the student should see the contact information (name, email) of every TA/Instructor, the time and place(or zoom link) for each TA/Instructor's Office Hour when clicking on the "Course Team" button/link.
