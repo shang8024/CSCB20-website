@@ -1,0 +1,1 @@
+As a student user, the student should see all the topic, handout, TA information of all the labs, and the lab materials when clicking on the "labs" button.
