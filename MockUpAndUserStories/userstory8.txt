@@ -1,0 +1,1 @@
+As a student user, the student should see a basic description of CSCB63, including the limiting factors of having the course (Exclusion and Prerequisite) on the home page.
