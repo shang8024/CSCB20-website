@@ -1,0 +1,1 @@
+As a student user, the student should see the footer when the user goes to the bottom of the page. The footer contains a link to the Faculty of Computer Science's main website when clicking the 'Faculty of Computer Science at UofT' link/button and a copyright statement of the site designers.
