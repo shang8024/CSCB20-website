@@ -4,10 +4,6 @@ from flask import Flask, render_template, request
 # tells Flask that "this" is the current running app
 app = Flask(__name__)
 
-# the todo list
-# we will store the todos in this list
-todo_list = []
-
 # setup the default route
 # this is the page the site will load by default (i.e. like the home page)
 @app.route('/<s>')
