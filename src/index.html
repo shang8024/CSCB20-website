@@ -2,16 +2,18 @@
 <html lang="en">
 <head>
 <title>CSCB63 Design and Analysis of Data Structures</title>
-
 <link href="style.css"
 rel="stylesheet">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
-  <nav>
+  <!-- code for top menu-->
+  <!-- inspired by https://codepen.io/andornagy/pen/RNeydj-->
+  <nav> 
     <div id="menu-title"><strong>CSCB63</strong> - Design and Analysis of Data Structures</div>
-    <label for="drop" class="button">Menu</label>
+    <!-- dropdown menu for mobile devices-->
+    <label for="drop" class="button">≡</label>
     <input type="checkbox" id="drop" />
         <ul class="menu">
             <li><a href="index.html#top">Home</a></li>
@@ -19,11 +21,12 @@ rel="stylesheet">
             <li>
                 <label for="drop-1" class="button">Course Materials</label>
                 <a>Course Materials</a>
+                <!-- dropdown items for "Course Materials"-->
                 <input type="checkbox" id="drop-1"/>
                 <ul>
                     <li><a href="">Lecture</a></li>
                     <li><a href="">Assignments</a></li>
-                    <li><a href="">Tests</a></li>
+                    <li><a href="index.html#tests">Tests</a></li>
                     <li><a href="Sample.pdf">Syllabus</a></li>
                 </ul> 
             </li>
@@ -32,43 +35,163 @@ rel="stylesheet">
             <li><a href="index.html#course-team">Course Team</a></li>
             <li><a href="https://forms.gle/Yx9QvFgNuEvaJMfy9">FeedBack</a></li>
         </ul>
-    </nav>
-<div class="main"> 
+  </nav>
+<div class="content">
   <center>
     <h1>CSCB63</h1>
     <p>Design and Analysis of Data Structures</p>
   </center>
-  <h2>Course Description</h2>
-  <p> Design, analysis, implementation and comparison of efficient data structures for common abstract data types. 
-  Priority queues: heaps and mergeable heaps. Dictionaries: balanced binary search trees, B-trees, hashing. 
-  Amortization: data structures for managing dynamic tables and disjoint sets. 
-  Data structures for representing graphs. Graph searches.
-
- </p>
-  <p><strong>Exclusion</strong> CSC263H, CSC265H, (CSCC78H)</p>
-  <p><strong>Prerequisite</strong> CSCB36H or (CSCB38H) & [CGPA 2.75 or enrolment in a CSC subject POSt]</p>
-  <p><strong>Syllabus</strong><!-- <a href= 
-"syllabus.html">Read Me!</a>--></p>
-  <h2>Instructor</h2>
-  <p><strong>Dr. Anna Bretscher</strong><br>
-    Email: <a
-href="mailto:anna.bretscher@utoronto.ca">anna.bretscher@utoronto.ca</a><br>
-    Office: IC 493 <br>
- </p>
-     
-  <h2>Timetable</h2>
- <h3>Lectures</h3>  
-  <p><br>Wednesdays 3-4pm <a href=" https://utoronto.zoom.us/j/89553548645">Zoom Link</a>, Thursdays 9:10-11:00  <a href=" https://utoronto.zoom.us/j/83378932991">Zoom Link</a><br></p>
-  <h3>Office Hours</h3> <p>Usually Mondays 11:00-12:30, Friday 10:40-11:30. Please see the calendar for weekly changes.<br></p>
-<span class="anchor" id="course-team"></span>
-  <div id="course-team">Course Team</div>
+  <section>
+    <h2>Course Description</h2><hr>
+    <div class="info-left">
+      <p> Design, analysis, implementation and comparison of efficient data structures for common abstract data types. 
+        Priority queues: heaps and mergeable heaps. Dictionaries: balanced binary search trees, B-trees, hashing. 
+        Amortization: data structures for managing dynamic tables and disjoint sets. 
+        Data structures for representing graphs. Graph searches.
+      </p>
+      <p><strong>Exclusion</strong> CSC263H, CSC265H, (CSCC78H)</p>
+      <p><strong>Prerequisite</strong> CSCB36H or (CSCB38H) & [CGPA 2.75 or enrolment in a CSC subject POSt]</p>
+      <p><strong>Syllabus</strong> <a href="Sample.pdf">pdf</a></p>
+    </div>
+    <hr class="mobile-split">
+    <div class="info-right">
+      <p><strong>Instructor</strong> Dr. Anna Bretscher</p>
+      <p><strong>Email</strong> <a
+        href="mailto:anna.bretscher@utoronto.ca">anna.bretscher@utoronto.ca</a></p>
+      <label><strong>Office Hour</strong> IC 493</label>
+      <ul>
+        <li><p>Mondays 11:00-12:30</p></li>
+        <li><p>Friday 10:40-11:30</p></li>
+      </ul>
+      <label><strong>Lecture</strong></label>
+      <ul>
+        <li><p>Wednesdays 15:00-16:00 <a href="https://utoronto.zoom.us/j/89553548645">Zoom Link</a></p></li>
+        <li><p>Thursdays 9:10-11:00 <a href="https://utoronto.zoom.us/j/83378932991">Zoom Link</a></p></li>
+      </ul>
+    </div>
+  </section>
+  <section class="grade">
+    <h2>Grading and Policies</h2><hr>
+    <h3><a href="">Assignments</a> (4)</h3>
+    <ul>
+      <li>4 each worth 5% for a total of 20%</li>
+      <li>Basic understanding questions</li>
+      <li>More challenging questions</li>
+      <li>Only some of the questions will be graded</li>
+      <li>Applied question (programming in C) </li>
+    </ul>
+    <h3><a href="#tests">Term tests</a> (3)</h3>
+    <ul>
+      <li>60 min each held in Wednesday lecture</li>
+      <li>Worth 15%, 15%, 15%</li>
+      <li>Test 1 covers A1, Test 2 covers A2, Test 3 covers A3</li>
+    </ul>
+    <h3><a href="#tests">Final exam</a></h3>
+    <ul>
+      <li>Worth 35%</li>
+    </ul>
+  </section>
+  <section id="tests">
+    <h2>Tests</h2><hr>
+    <ul class="test-menu">
+      <li>
+          <input type="radio" name="menuopt" id="drop1" />
+          <label class="opener" for="drop1"><h3>Term Test 1</h3><hr></label>
+          <label class="closer" for="dropclose"><h3>Term Test 1</h3><hr></label>
+          <ul>
+            <li><strong>Time</strong> 2021 Feb. 10th, 15:00-16:00</li>
+            <li><strong>Worth</strong> 15%</li>
+            <li><strong>Sample</strong> <a href="Sample.pdf">TT1_2019_Fall</a></li>
+            <li><strong>Solution</strong> <a href="Sample.pdf">TT1_solution</a></li>
+          </ul>
+      </li>
+      <li>
+          <input type="radio" name="menuopt" id="drop2" />
+          <label class="opener" for="drop2"><h3>Term Test 2</h3><hr></label>
+          <label class="closer" for="dropclose"><h3>Term Test 2</h3><hr></label>
+          <ul>
+            <li><strong>Time</strong> 2021 Mar. 17th, 15:00-16:00</li>
+            <li><strong>Worth</strong> 15%</li>
+            <li><strong>Sample</strong> <a href="Sample.pdf">TT2_2019_Fall</a></li>
+            <li><strong>Solution</strong> <a href="Sample.pdf">TT2_solution</a></li>
+          </ul>
+          <input type="radio" name="menuopt" id="dropclose" />
+      </li>
+      <li>
+        <input type="radio" name="menuopt" id="drop3" />
+        <label class="opener" for="drop3"><h3>Term Test 3</h3><hr></label>
+        <label class="closer" for="dropclose"><h3>Term Test 3</h3><hr></label>
+        <ul>
+          <li><strong>Time</strong> 2021 Mar. 24th, 15:00-16:00</li>
+          <li><strong>Worth</strong> 15%</li>
+          <li><strong>Sample</strong> <a href="Sample.pdf">TT3_2019_Fall</a></li>
+          <li><strong>Solution</strong> <a href="Sample.pdf">TT3_solution</a></li>
+        </ul>
+        <input type="radio" name="menuopt" id="dropclose" />
+    </li>
+    <li>
+      <input type="radio" name="menuopt" id="drop4" />
+      <label class="opener" for="drop4"><h3>Final Exam</h3><hr></label>
+      <label class="closer" for="dropclose"><h3>Final Exam</h3><hr></label>
+      <ul>
+        <li><strong>Time</strong> 2021 Apr. 20th, 8:00-10:00</li>
+        <li><strong>Worth</strong> 35%</li>
+        <li><strong>Sample</strong> <a href="Sample.pdf">Final_2019_Fall</a> <a href="Sample.pdf">Final_2018_Fall</a></li>
+      </ul>
+      <input type="radio" name="menuopt" id="dropclose" />
+    </li>
+    </ul>
+  </section>
+  <section id="course-team">
+    <h2>Course Team</h2><hr>
+    <div class="table">
+      <div class="heading">
+        <div class="cell"></div>
+        <div class="cell">Name</div>
+        <div class="cell">Email</div>
+        <div class="cell">Office Hour</div>
+        <div class="cell"></div>
+      </div>
+      <div class="row">
+        <div class="cell">Instructor</div>
+        <div class="cell">Anna Bretscher</div>
+        <div class="cell"><a href="mailto:anna.bretscher@utoronto.ca">anna.bretscher@utoronto.ca</a></div>
+        <div class="cell">Mon 11:00-12:30; Fri 10:40-11:30</div>
+        <div class="cell">IC 493</div>
+      </div>
+      <div class="row">
+        <div class="cell">Teaching Assistant</div>
+        <div class="cell">Sample1</div>
+        <div class="cell"><a href="mailto:sample1@mail.utoronto.ca">sample1@mail.utoronto.ca</a></div>
+        <div class="cell">Mon 13:00-16:00; Wed 18:00-20:00</div>
+        <div class="cell"><a href="https://utoronto.zoom.us/j/83378932991">Zoom Link</a></div>
+      </div>
+      <div class="row">
+        <div class="cell">Teaching Assistant</div>
+        <div class="cell">Sample2</div>
+        <div class="cell"><a href="mailto:sample2@mail.utoronto.ca">sample2@mail.utoronto.ca</a></div>
+        <div class="cell">Thu 14:30-17:30; Fri 13:00-16:00</div>
+        <div class="cell"><a href="https://utoronto.zoom.us/j/83378932991">Zoom Link</a></div>
+      </div>
+      <div class="row">
+        <div class="cell">Teaching Assistant</div>
+        <div class="cell">Sample3</div>
+        <div class="cell"><a href="mailto:sample3@mail.utoronto.ca">sample3@mail.utoronto.ca</a></div>
+        <div class="cell">Wed 10:00-13:00; Sun 14:00-18:00</div>
+        <div class="cell"><a href="https://utoronto.zoom.us/j/83378932991">Zoom Link</a></div>
+      </div>
+      <div class="row">
+        <div class="cell">Teaching Assistant</div>
+        <div class="cell">Sample4</div>
+        <div class="cell"><a href="mailto:sample4@mail.utoronto.ca">sample4@mail.utoronto.ca</a></div>
+        <div class="cell">Tue 14:30-17:30; Sat 13:00-16:00</div>
+        <div class="cell"><a href="https://utoronto.zoom.us/j/83378932991">Zoom Link</a></div>
+      </div>
+    </div>
+  </section>
 </div>
-
 <div id="footer">
-  <p><a href="https://web.cs.toronto.edu/">Faculty of Computer Science at UofT</a><br>
-    Site designed by <strong>Jiale Shang</strong> & <strong>Zechen Lai</strong>
-  </p>
-  
-</div>
+  <p><a href="https://web.cs.toronto.edu/">Faculty of Computer Science at UofT</a></p>
+  <p>Site designed by <strong>Jiale Shang</strong> & <strong>Zechen Lai</strong></p>
 </body>
 </html>
