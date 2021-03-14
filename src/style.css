@@ -36,18 +36,25 @@ h2,h3 {
 .grade a{
 	text-decoration: none;
 }
+.anchor {
+	display: block;
+	height: 60px;
+	margin-top: -60px; 
+  	visibility: hidden;
+}
+
 /*-------------section and content------------*/
 section {
-    /* Add shadows to create the "card" effect */
+    /* Add shadows effect */
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
-    margin-top: 30px;
-    margin-bottom:30px;
+    margin:20px 0;
     padding: 20px;
     background: white;
     border-radius: 10px; /* 5px rounded corners */
 	overflow: auto;
 }
+/* infor frame for "Course Description"*/
 .info-left{
 	max-width: 50%;
 	float: left;
@@ -59,7 +66,7 @@ section {
 	padding-left: 5px;
 }
 /*-------------------top menu-------------*/
-/*menu butto  for mobile*/
+/*menu button  for mobile*/
 .button,
 [id^=drop],.mobile-split {
 	display: none;
@@ -91,8 +98,6 @@ nav:after {
 	clear:both;
 }
 
-/* Removing padding, margin and "list-style" from the "ul",
- * and adding "position:reltive" */
 nav ul {
 	float: right;
 	padding:0px;
@@ -102,7 +107,6 @@ nav ul {
 	position: relative;
 }
 	
-/* Positioning the navigation items inline */
 nav ul li {
 	margin: 0;
 	float: left;
@@ -156,7 +160,7 @@ nav ul ul a:hover {
 .table{
     display: table;
     width: 100%;
-    text-align: left;
+    text-align: center;
     min-width: 0;
 }
 
@@ -196,6 +200,9 @@ nav ul ul a:hover {
 .test-menu input:checked ~ .closer{
 	display:block;
 }
+.test-menu label:hover{
+	color: #8696a7;
+}
 /*-----------------footer-----------*/
 #footer{
 	padding:10px;
@@ -213,6 +220,7 @@ nav ul ul a:hover {
 	text-decoration: none;
 	transition: 0.4s;
 }
+  
 @media all and (max-width : 824px) {
 	/* Adjust the display of the "Course Description" section */
 	.info-left,.info-right{

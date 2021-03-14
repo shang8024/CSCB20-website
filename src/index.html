@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
 <title>CSCB63 Design and Analysis of Data Structures</title>
-<link href="style.css"
-rel="stylesheet">
+<link href="style.css" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -16,7 +15,7 @@ rel="stylesheet">
     <label for="drop" class="button">≡</label>
     <input type="checkbox" id="drop" />
         <ul class="menu">
-            <li><a href="index.html#top">Home</a></li>
+            <li><a href="#top">Home</a></li>
             <li><a href="https://piazza.com/mail.utoronto.ca/winter2020/cscb63/home">Piazza</a></li>
             <li>
                 <label for="drop-1" class="button">Course Materials</label>
@@ -24,15 +23,15 @@ rel="stylesheet">
                 <!-- dropdown items for "Course Materials"-->
                 <input type="checkbox" id="drop-1"/>
                 <ul>
-                    <li><a href="">Lecture</a></li>
-                    <li><a href="">Assignments</a></li>
-                    <li><a href="index.html#tests">Tests</a></li>
+                    <li><a href="lectures.html">Lectures</a></li>
+                    <li><a href="assignments.html">Assignments</a></li>
+                    <li><a href="tests.html">Tests</a></li>
                     <li><a href="Sample.pdf">Syllabus</a></li>
                 </ul> 
             </li>
-            <li><a href="">Labs</a></li>
+            <li><a href="labs.html">Labs</a></li>
             <li><a href="https://markus.utsc.utoronto.ca/cscb63w21">Markus</a></li>
-            <li><a href="index.html#course-team">Course Team</a></li>
+            <li><a href="#course-team">Course Team</a></li>
             <li><a href="https://forms.gle/Yx9QvFgNuEvaJMfy9">FeedBack</a></li>
         </ul>
   </nav>
@@ -41,6 +40,7 @@ rel="stylesheet">
     <h1>CSCB63</h1>
     <p>Design and Analysis of Data Structures</p>
   </center>
+  <span class="anchor" id="course-descript"></span>
   <section>
     <h2>Course Description</h2><hr>
     <div class="info-left">
@@ -70,79 +70,8 @@ rel="stylesheet">
       </ul>
     </div>
   </section>
-  <section class="grade">
-    <h2>Grading and Policies</h2><hr>
-    <h3><a href="">Assignments</a> (4)</h3>
-    <ul>
-      <li>4 each worth 5% for a total of 20%</li>
-      <li>Basic understanding questions</li>
-      <li>More challenging questions</li>
-      <li>Only some of the questions will be graded</li>
-      <li>Applied question (programming in C) </li>
-    </ul>
-    <h3><a href="#tests">Term tests</a> (3)</h3>
-    <ul>
-      <li>60 min each held in Wednesday lecture</li>
-      <li>Worth 15%, 15%, 15%</li>
-      <li>Test 1 covers A1, Test 2 covers A2, Test 3 covers A3</li>
-    </ul>
-    <h3><a href="#tests">Final exam</a></h3>
-    <ul>
-      <li>Worth 35%</li>
-    </ul>
-  </section>
-  <section id="tests">
-    <h2>Tests</h2><hr>
-    <ul class="test-menu">
-      <li>
-          <input type="radio" name="menuopt" id="drop1" />
-          <label class="opener" for="drop1"><h3>Term Test 1</h3><hr></label>
-          <label class="closer" for="dropclose"><h3>Term Test 1</h3><hr></label>
-          <ul>
-            <li><strong>Time</strong> 2021 Feb. 10th, 15:00-16:00</li>
-            <li><strong>Worth</strong> 15%</li>
-            <li><strong>Sample</strong> <a href="Sample.pdf">TT1_2019_Fall</a></li>
-            <li><strong>Solution</strong> <a href="Sample.pdf">TT1_solution</a></li>
-          </ul>
-      </li>
-      <li>
-          <input type="radio" name="menuopt" id="drop2" />
-          <label class="opener" for="drop2"><h3>Term Test 2</h3><hr></label>
-          <label class="closer" for="dropclose"><h3>Term Test 2</h3><hr></label>
-          <ul>
-            <li><strong>Time</strong> 2021 Mar. 17th, 15:00-16:00</li>
-            <li><strong>Worth</strong> 15%</li>
-            <li><strong>Sample</strong> <a href="Sample.pdf">TT2_2019_Fall</a></li>
-            <li><strong>Solution</strong> <a href="Sample.pdf">TT2_solution</a></li>
-          </ul>
-          <input type="radio" name="menuopt" id="dropclose" />
-      </li>
-      <li>
-        <input type="radio" name="menuopt" id="drop3" />
-        <label class="opener" for="drop3"><h3>Term Test 3</h3><hr></label>
-        <label class="closer" for="dropclose"><h3>Term Test 3</h3><hr></label>
-        <ul>
-          <li><strong>Time</strong> 2021 Mar. 24th, 15:00-16:00</li>
-          <li><strong>Worth</strong> 15%</li>
-          <li><strong>Sample</strong> <a href="Sample.pdf">TT3_2019_Fall</a></li>
-          <li><strong>Solution</strong> <a href="Sample.pdf">TT3_solution</a></li>
-        </ul>
-        <input type="radio" name="menuopt" id="dropclose" />
-    </li>
-    <li>
-      <input type="radio" name="menuopt" id="drop4" />
-      <label class="opener" for="drop4"><h3>Final Exam</h3><hr></label>
-      <label class="closer" for="dropclose"><h3>Final Exam</h3><hr></label>
-      <ul>
-        <li><strong>Time</strong> 2021 Apr. 20th, 8:00-10:00</li>
-        <li><strong>Worth</strong> 35%</li>
-        <li><strong>Sample</strong> <a href="Sample.pdf">Final_2019_Fall</a> <a href="Sample.pdf">Final_2018_Fall</a></li>
-      </ul>
-      <input type="radio" name="menuopt" id="dropclose" />
-    </li>
-    </ul>
-  </section>
-  <section id="course-team">
+  <span class="anchor" id="course-team"></span>
+  <section>
     <h2>Course Team</h2><hr>
     <div class="table">
       <div class="heading">
@@ -180,18 +109,34 @@ rel="stylesheet">
         <div class="cell">Wed 10:00-13:00; Sun 14:00-18:00</div>
         <div class="cell"><a href="https://utoronto.zoom.us/j/83378932991">Zoom Link</a></div>
       </div>
-      <div class="row">
-        <div class="cell">Teaching Assistant</div>
-        <div class="cell">Sample4</div>
-        <div class="cell"><a href="mailto:sample4@mail.utoronto.ca">sample4@mail.utoronto.ca</a></div>
-        <div class="cell">Tue 14:30-17:30; Sat 13:00-16:00</div>
-        <div class="cell"><a href="https://utoronto.zoom.us/j/83378932991">Zoom Link</a></div>
-      </div>
     </div>
+  </section>
+  <span class="anchor" id="grade"></span>
+  <section class="grade">
+    <h2>Grading and Policies</h2><hr>
+    <h3><a href="assignments.html">Assignments</a> (4)</h3>
+    <ul>
+      <li>4 each worth 5% for a total of 20%</li>
+      <li>Basic understanding questions</li>
+      <li>More challenging questions</li>
+      <li>Only some of the questions will be graded</li>
+      <li>Applied question (programming in C) </li>
+    </ul>
+    <h3><a href="tests.html">Term tests</a> (3)</h3>
+    <ul>
+      <li>60 min each held in Wednesday lecture</li>
+      <li>Worth 15%, 15%, 15%</li>
+      <li>Test 1 covers A1, Test 2 covers A2, Test 3 covers A3</li>
+    </ul>
+    <h3><a href="tests.html">Final exam</a></h3>
+    <ul>
+      <li>Worth 35%</li>
+    </ul>
   </section>
 </div>
 <div id="footer">
   <p><a href="https://web.cs.toronto.edu/">Faculty of Computer Science at UofT</a></p>
   <p>Site designed by <strong>Jiale Shang</strong> & <strong>Zechen Lai</strong></p>
+</div>
 </body>
 </html>
