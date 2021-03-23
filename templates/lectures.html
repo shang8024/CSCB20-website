@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>CSCB63 Design and Analysis of Data Structures</title>
+<link href="../static/style.css" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+  <!-- code for top menu which will stick at the top of the page when scolling-->
+  <!-- inspired by https://codepen.io/andornagy/pen/RNeydj-->
+  <nav> 
+    <!--menu title, change position and font size when it becomes a dropdown menu-->
+    <div id="menu-title"><strong>CSCB63</strong> - Design and Analysis of Data Structures</div>
+    <!-- dropdown menu for mobile devices-->
+    <label for="drop" class="button">≡</label>
+    <input type="checkbox" id="drop"/>
+    <ul class="menu">
+      <li><a href="./home.html">Home</a></li>
+      <li><a href="https://piazza.com/utoronto.ca/winter2021/cscb63h3slec01/home">Piazza</a></li>
+      <li>
+        <label for="drop-1" class="button">Course Materials</label>
+        <a>Course Materials</a>
+        <!-- dropdown items for "Course Materials"-->
+        <input type="checkbox" id="drop-1"/>
+        <ul>
+          <li><a href="#top">Lectures</a></li>
+          <li><a href="./home.html#assignments">Assignments</a></li>
+          <li><a href="./home.html#tests">Tests</a></li>
+          <li><a href="../static/Sample.pdf">Syllabus</a></li>
+        </ul> 
+      </li>
+      <li><a href="./labs.html">Labs</a></li>
+      <li><a href="https://markus.utsc.utoronto.ca/cscb63w21">Markus</a></li>
+      <li><a href="./home.html#course-team">Course Team</a></li>
+      <li><a href="">Account</a></li>
+    </ul>
+  </nav>
+  <!--the content div controls the max and min width for all the section contents on the body of the page-->
+  <div class="content">
+    <!-- content for the title, center at the begining of the page but won't stick at the top when scrolling as the header-->
+    <div class="title">
+      <h1>CSCB63</h1>
+      <p>Design and Analysis of Data Structures</p>
+    </div>
+    <!--first section -- lecturs-->
+    <section id="lectures">
+      <h2>Lecture</h2><hr>
+      <p>Lecture timetable see <a href="./home.html#course-descript">Course Description</a>.<br>
+        Print and bring the lectures slides/handouts to class each week.</p>
+      <!--lecture table, including weeks, topic and links to specific weeks-->
+      <div class="table">
+        <div class="heading">
+          <div class="cell">Week</div>
+          <div class="cell">Topic</div>
+        </div>
+        <div class="row">
+          <div class="cell">1</div>
+          <div class="cell"><a href="#w1">Intro, Worst Case Complexity</a></div>
+        </div>
+        <div class="row">
+          <div class="cell">2</div>
+          <div class="cell"><a href="#w2">Balanced Trees (AVL)</a></div>
+        </div>
+        <div class="row">
+          <div class="cell">3</div>
+          <div class="cell"><a href="#w3">AVL Trees height, and Augment. Interval Trees</a></div>
+        </div>
+        <div class="row">
+          <div class="cell">4</div>
+          <div class="cell"><a href="#w4">Finish Interval Trees, Heaps and Graph Search Algorithms</a></div>
+        </div>
+        <div class="row">
+          <div class="cell">5</div>
+          <div class="cell"><a href="#w5">Graph Searches and Minimum Spanning Trees</a></div>
+        </div>
+        <div class="row">
+          <div class="cell">6</div>
+          <div class="cell"><a href="#w6">Proof of Prims, Dijkstra's Algorithm, Strongly Connected Components</a></div>
+        </div>
+        <div class="row">
+          <div class="cell">7</div>
+          <div class="cell"><a href="#w7">Amortized Analysis</a></div>
+        </div>
+        <div class="row">
+          <div class="cell">8</div>
+          <div class="cell"><a href="#w8">Disjoint Sets, Fibonacci Heaps</a></div>
+        </div>
+      </div>
+      <!--end of lecture table-->
+    </section>
+    <span class="anchor" id="w1"></span>
+    <!--lecture information for week 1, including Wed and Thu lecs-->
+    <section>
+      <h2>Week 1 - Intro, Worst Case Complexity</h2><hr>
+      <center><h3>Wed</h3></center>
+      <p><strong>Pre-lecture reading/exercises</strong> <br>None</p>
+      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
+      <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
+      <center><h3>Thu</h3></center>
+      <p><strong>Pre-lecture reading/exercises</strong> <br>
+        CLRS 3.1 (not including little "oh") or watch <a href="https://www.youtube.com/watch?v=JU767SDMDvA">Big Oh Video Insertion Sort Video</a></p>
+      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
+      <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
+    </section>
+    <span class="anchor" id="w2"></span>
+    <!--lecture information for week 2, including Wed and Thu lecs-->
+    <section>
+      <h2>Week 2 - Balanced Trees (AVL)</h2><hr>
+      <center><h3>Wed</h3></center>
+      <p><strong>Pre-lecture reading/exercises</strong> <br>None</p>
+      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
+      <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
+      <center><h3>Thu</h3></center>
+      <p><strong>Pre-lecture reading/exercises</strong> <br>
+        Refresh your understanding of binary search trees <a href="https://www.cs.usfca.edu/~galles/visualization/BST.html">video visualization applet</a></p>
+      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
+      <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
+    </section>
+    <span class="anchor" id="w3"></span>
+    <!--lecture information for week 3, including Wed and Thu lecs-->
+    <section>
+      <h2>Week 3 - AVL Trees height, and Augment. Interval Trees</h2><hr>
+      <center><h3>Wed</h3></center>
+      <p><strong>Pre-lecture reading/exercises</strong> <br>None</p>
+      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
+      <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
+      <center><h3>Thu</h3></center>
+      <p><strong>Pre-lecture reading/exercises</strong> <br>None</p>
+      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
+      <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
+    </section>
+    <span class="anchor" id="w4"></span>
+    <!--lecture information for week 4, including Wed and Thu lecs-->
+    <section>
+      <h2>Week 4 - Finish Interval Trees, Heaps and Graph Search Algorithms</h2><hr>
+      <center><h3>Wed</h3></center>
+      <p><strong>Pre-lecture reading/exercises</strong> <br>None</p>
+      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
+      <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
+      <center><h3>Thu</h3></center>
+      <p><strong>Pre-lecture reading/exercises</strong> <br>Chapter 6.1-6.4</p>
+      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
+      <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
+    </section>
+    <span class="anchor" id="w5"></span>
+    <!--lecture information for week 5, including Wed and Thu lecs-->
+    <section>
+      <h2>Week 5 - Graph Searches and Minimum Spanning Trees</h2><hr>
+      <center><h3>Wed</h3></center>
+      <p><strong>Term Test1</strong> see <a href="./home.html#tests">Tests</a></p>
+      <center><h3>Thu</h3></center>
+      <p><strong>Pre-lecture reading/exercises</strong> <br>
+        If you have not had your tutorial, read the graph handout on the tutorials page.</p>
+      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
+      <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
+    </section>
+    <span class="anchor" id="w6"></span>
+    <!--lecture information for week 6, including Wed and Thu lecs-->
+    <section>
+      <h2>Week 6 - Proof of Prims, Dijkstra's Algorithm, Strongly Connected Components</h2><hr>
+      <center><h3>Wed</h3></center>
+      <p><strong>Pre-lecture reading/exercises</strong> <br>Ch 24.3, Practice Prims algorithm</p>
+      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">lecture</a></p>
+      <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
+      <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
+      <center><h3>Thu</h3></center>
+      <p><strong>Pre-lecture reading/exercises</strong> <br>22.5, Review DFS - make sure you understand it</p>
+      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
+      <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
+    </section>
+    <span class="anchor" id="w7"></span>
+    <!--lecture information for week 7, including Wed and Thu lecs-->
+    <section>
+      <h2>Week 7 - Amortized Analysis</h2><hr>
+      <center><h3>Wed</h3></center>
+      <p><strong>Pre-lecture reading/exercises</strong> <br>Ch. 17.4, Ch. 21</p>
+      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
+      <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
+      <center><h3>Thu</h3></center>
+      <p><strong>Pre-lecture reading/exercises</strong> <br>None</p>
+      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
+      <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
+    </section>
+    <span class="anchor" id="w8"></span>
+    <!--lecture information for week 8, including Wed and Thu lecs-->
+    <section>
+      <h2>Week 8 - Disjoint Sets, Fibonacci Heaps</h2><hr>
+      <center><h3>Wed</h3></center>
+      <p><strong>Pre-lecture reading/exercises</strong> <br>Ch. 20</p>
+      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
+      <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
+      <center><h3>Thu</h3></center>
+      <p><strong>Pre-lecture reading/exercises</strong> <br>None</p>
+      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
+      <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
+    </section>
+  </div>
+  <!--content end-->
+  <!--a footer with designers' name and link to Faculty CS UofT-->
+  <div id="footer">
+    <p><a href="https://web.cs.toronto.edu/">Faculty of Computer Science at UofT</a></p>
+    <p>Site designed by <strong>Jiale Shang</strong> & <strong>Zechen Lai</strong></p>
+  </div>
+</body>
+</html>
