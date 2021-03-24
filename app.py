@@ -1,6 +1,8 @@
 # required imports
 import sqlite3
-from flask import Flask, render_template, request, g
+from flask import Flask
+from flask import Flask, render_template, request, g, flash, redirect,session, url_for,abort
+import os
 
 DATABSE='./assginment3.db'
 
@@ -28,28 +30,38 @@ def close_connection(exception):
     if db is not None:
         db.close()
     
-
 @app.route('/')
 def root():
-    db=get_db()
-    db.row_factory = make_dicts
-    employees=[]
-    for employee in query_db('select * from employees'):
-        employees.append(employee)
-    db.close()
-    return render_template('index.html',employee=employees)
+    if not session.get('logged_in'):
+        return render_template('index.html',error= "username ")
+    else:
+        return render_template('home.html')
 
-@app.route('/login')
-def add_todo():
-    return 
+@app.route('/login', methods=['POST'])
+def do_admin_login():
 
-@app.route('/signup')
-def clear_todo():
-    global todo_list
-    todo_list = []
+    if request.form['password'] == 'password' and request.form['username'] == 'admin':
+        session['logged_in'] = True
+
     return root()
 
-if __name__ == '__main__':
-    # we set debug=True so you don't have to restart the app everything you make changes
-    # just refresh the browser after each change
+@app.route("/logout")
+def logout():
+    session['logged_in'] = False
+    return root()
+
+@app.route('/home')
+def home():
+    return render_template('home.html')
+
+@app.route('/labs')
+def labs():
+    return render_template('labs.html')
+    
+@app.route('/lectures')
+def lectures():
+    return render_template('lectures.html')
+
+if __name__ == "__main__":
+    app.secret_key = os.urandom(12)
     app.run(debug=True)
