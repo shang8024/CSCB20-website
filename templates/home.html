@@ -24,16 +24,23 @@
         <!-- dropdown items for "Course Materials"-->
         <input type="checkbox" id="drop-1"/>
         <ul>
-          <li><a href="./lectures.html">Lectures</a></li>
+          <li><a href="{{ url_for('lectures') }}">Lectures</a></li>
           <li><a href="#assignments">Assignments</a></li>
           <li><a href="#tests">Tests</a></li>
           <li><a href="../static/Sample.pdf">Syllabus</a></li>
         </ul> 
       </li>
-      <li><a href="./labs.html">Labs</a></li>
+      <li><a href="{{ url_for('labs') }}">Labs</a></li>
       <li><a href="https://markus.utsc.utoronto.ca/cscb63w21">Markus</a></li>
       <li><a href="#course-team">Course Team</a></li>
-      <li><a href="">Account</a></li>
+      <li><label for="drop-2" class="button">Account</label>
+        <a>Account</a>
+        <!-- dropdown items for "Course Materials"-->
+        <input type="checkbox" id="drop-2"/>
+        <ul>
+          <li><a href="/logout">logout</a></li>
+        </ul> 
+      </li>
     </ul>
   </nav>
   <!--the content div controls the max and min width for all the section contents on the body of the page-->

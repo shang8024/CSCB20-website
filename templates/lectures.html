@@ -16,7 +16,7 @@
     <label for="drop" class="button">≡</label>
     <input type="checkbox" id="drop"/>
     <ul class="menu">
-      <li><a href="./home.html">Home</a></li>
+      <li><a href="{{ url_for('home') }}">Home</a></li>
       <li><a href="https://piazza.com/utoronto.ca/winter2021/cscb63h3slec01/home">Piazza</a></li>
       <li>
         <label for="drop-1" class="button">Course Materials</label>
@@ -25,15 +25,22 @@
         <input type="checkbox" id="drop-1"/>
         <ul>
           <li><a href="#top">Lectures</a></li>
-          <li><a href="./home.html#assignments">Assignments</a></li>
-          <li><a href="./home.html#tests">Tests</a></li>
+          <li><a href="{{ url_for('home', _anchor='assignments') }}">Assignments</a></li>
+          <li><a href="{{ url_for('home', _anchor='tests') }}">Tests</a></li>
           <li><a href="../static/Sample.pdf">Syllabus</a></li>
         </ul> 
       </li>
-      <li><a href="./labs.html">Labs</a></li>
+      <li><a href="{{ url_for('lectures') }}">Labs</a></li>
       <li><a href="https://markus.utsc.utoronto.ca/cscb63w21">Markus</a></li>
-      <li><a href="./home.html#course-team">Course Team</a></li>
-      <li><a href="">Account</a></li>
+      <li><a href="{{ url_for('home', _anchor='course-team') }}">Course Team</a></li>
+      <li><label for="drop-2" class="button">Account</label>
+        <a>Account</a>
+        <!-- dropdown items for "Course Materials"-->
+        <input type="checkbox" id="drop-2"/>
+        <ul>
+          <li><a href="/logout">logout</a></li>
+        </ul> 
+      </li>
     </ul>
   </nav>
   <!--the content div controls the max and min width for all the section contents on the body of the page-->
@@ -46,7 +53,7 @@
     <!--first section -- lecturs-->
     <section id="lectures">
       <h2>Lecture</h2><hr>
-      <p>Lecture timetable see <a href="./home.html#course-descript">Course Description</a>.<br>
+      <p>Lecture timetable see <a href="{{ url_for('home', _anchor='course-descript') }}">Course Description</a>.<br>
         Print and bring the lectures slides/handouts to class each week.</p>
       <!--lecture table, including weeks, topic and links to specific weeks-->
       <div class="table">
@@ -156,7 +163,7 @@
     <section>
       <h2>Week 5 - Graph Searches and Minimum Spanning Trees</h2><hr>
       <center><h3>Wed</h3></center>
-      <p><strong>Term Test1</strong> see <a href="./home.html#tests">Tests</a></p>
+      <p><strong>Term Test1</strong> see <a href="{{ url_for('home', _anchor='tests') }}">Tests</a></p>
       <center><h3>Thu</h3></center>
       <p><strong>Pre-lecture reading/exercises</strong> <br>
         If you have not had your tutorial, read the graph handout on the tutorials page.</p>
