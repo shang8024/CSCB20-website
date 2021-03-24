@@ -33,17 +33,19 @@ def close_connection(exception):
 @app.route('/')
 def root():
     if not session.get('logged_in'):
-        return render_template('index.html',error= "username ")
+        return render_template('index.html',)
     else:
         return render_template('home.html')
 
 @app.route('/login', methods=['POST'])
-def do_admin_login():
-
+def login():
+    error = None
     if request.form['password'] == 'password' and request.form['username'] == 'admin':
         session['logged_in'] = True
-
-    return root()
+        return redirect(url_for('home'))
+    else:
+        error = 'Invalid redentials'
+    return render_template('index.html',error=error)
 
 @app.route("/logout")
 def logout():
