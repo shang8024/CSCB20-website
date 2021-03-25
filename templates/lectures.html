@@ -11,13 +11,13 @@
   <!-- inspired by https://codepen.io/andornagy/pen/RNeydj-->
   <nav> 
     <!--menu title, change position and font size when it becomes a dropdown menu-->
-    <div id="menu-title">Welcome, {% if type%}<strong>Instructor</strong>{% else %}<strong>Student</strong>{% endif %} {{ name }}</div>
+    <div id="menu-title">Welcome, <strong>{% if type %}Instructor{% else %}Student{% endif %}</strong> {{ name }}</div>
     <!-- dropdown menu for mobile devices-->
     <label for="drop" class="button">≡</label>
     <input type="checkbox" id="drop"/>
     <ul class="menu">
       <li><a href="{{ url_for('home') }}">Home</a></li>
-      <li><a href="https://piazza.com/utoronto.ca/winter2021/cscb63h3slec01/home">Piazza</a></li>
+      <li><a href="http://piazza.com/utoronto.ca/winter2021/cscb63h3slec01/home">Piazza</a></li>
       <li>
         <label for="drop-1" class="button">Course Materials</label>
         <a>Course Materials</a>
@@ -31,14 +31,17 @@
         </ul> 
       </li>
       <li><a href="{{ url_for('labs') }}">Labs</a></li>
-      <li><a href="https://markus.utsc.utoronto.ca/cscb63w21">Markus</a></li>
+      <li><a href="http://markus.utsc.utoronto.ca/cscb63w21">Markus</a></li>
       <li><a href="{{ url_for('home', _anchor='course-team') }}">Course Team</a></li>
       <li><label for="drop-2" class="button">Account</label>
         <a>Account</a>
         <!-- dropdown items for "Course Materials"-->
         <input type="checkbox" id="drop-2"/>
         <ul>
-          <li><a href="/logout">logout</a></li>
+          <li><a href="{{ url_for('grade')}}">Grade</a></li>
+          <li><a href="{{ url_for('feedback') }}">Feedback</a></li>
+          <li><a href="{{ url_for('setting') }}">Setting</a></li>
+          <li><a href="/logout">Log out</a></li>
         </ul> 
       </li>
     </ul>
@@ -102,13 +105,13 @@
       <h2>Week 1 - Intro, Worst Case Complexity</h2><hr>
       <center><h3>Wed</h3></center>
       <p><strong>Pre-lecture reading/exercises</strong> <br>None</p>
-      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Recording</strong> <a href="http://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
       <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
       <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
       <center><h3>Thu</h3></center>
       <p><strong>Pre-lecture reading/exercises</strong> <br>
-        CLRS 3.1 (not including little "oh") or watch <a href="https://www.youtube.com/watch?v=JU767SDMDvA">Big Oh Video Insertion Sort Video</a></p>
-      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+        CLRS 3.1 (not including little "oh") or watch <a href="http://www.youtube.com/watch?v=JU767SDMDvA">Big Oh Video Insertion Sort Video</a></p>
+      <p><strong>Recording</strong> <a href="http://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
       <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
       <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
     </section>
@@ -118,13 +121,13 @@
       <h2>Week 2 - Balanced Trees (AVL)</h2><hr>
       <center><h3>Wed</h3></center>
       <p><strong>Pre-lecture reading/exercises</strong> <br>None</p>
-      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Recording</strong> <a href="http://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
       <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
       <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
       <center><h3>Thu</h3></center>
       <p><strong>Pre-lecture reading/exercises</strong> <br>
-        Refresh your understanding of binary search trees <a href="https://www.cs.usfca.edu/~galles/visualization/BST.html">video visualization applet</a></p>
-      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+        Refresh your understanding of binary search trees <a href="http://www.cs.usfca.edu/~galles/visualization/BST.html">video visualization applet</a></p>
+      <p><strong>Recording</strong> <a href="http://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
       <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
       <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
     </section>
@@ -134,12 +137,12 @@
       <h2>Week 3 - AVL Trees height, and Augment. Interval Trees</h2><hr>
       <center><h3>Wed</h3></center>
       <p><strong>Pre-lecture reading/exercises</strong> <br>None</p>
-      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Recording</strong> <a href="http://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
       <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
       <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
       <center><h3>Thu</h3></center>
       <p><strong>Pre-lecture reading/exercises</strong> <br>None</p>
-      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Recording</strong> <a href="http://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
       <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
       <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
     </section>
@@ -149,12 +152,12 @@
       <h2>Week 4 - Finish Interval Trees, Heaps and Graph Search Algorithms</h2><hr>
       <center><h3>Wed</h3></center>
       <p><strong>Pre-lecture reading/exercises</strong> <br>None</p>
-      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Recording</strong> <a href="http://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
       <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
       <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
       <center><h3>Thu</h3></center>
       <p><strong>Pre-lecture reading/exercises</strong> <br>Chapter 6.1-6.4</p>
-      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Recording</strong> <a href="http://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
       <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
       <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
     </section>
@@ -167,7 +170,7 @@
       <center><h3>Thu</h3></center>
       <p><strong>Pre-lecture reading/exercises</strong> <br>
         If you have not had your tutorial, read the graph handout on the tutorials page.</p>
-      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Recording</strong> <a href="http://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
       <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
       <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
     </section>
@@ -177,12 +180,12 @@
       <h2>Week 6 - Proof of Prims, Dijkstra's Algorithm, Strongly Connected Components</h2><hr>
       <center><h3>Wed</h3></center>
       <p><strong>Pre-lecture reading/exercises</strong> <br>Ch 24.3, Practice Prims algorithm</p>
-      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">lecture</a></p>
+      <p><strong>Recording</strong> <a href="http://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">lecture</a></p>
       <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
       <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
       <center><h3>Thu</h3></center>
       <p><strong>Pre-lecture reading/exercises</strong> <br>22.5, Review DFS - make sure you understand it</p>
-      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Recording</strong> <a href="http://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
       <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
       <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
     </section>
@@ -192,12 +195,12 @@
       <h2>Week 7 - Amortized Analysis</h2><hr>
       <center><h3>Wed</h3></center>
       <p><strong>Pre-lecture reading/exercises</strong> <br>Ch. 17.4, Ch. 21</p>
-      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Recording</strong> <a href="http://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
       <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
       <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
       <center><h3>Thu</h3></center>
       <p><strong>Pre-lecture reading/exercises</strong> <br>None</p>
-      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Recording</strong> <a href="http://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
       <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
       <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
     </section>
@@ -207,12 +210,12 @@
       <h2>Week 8 - Disjoint Sets, Fibonacci Heaps</h2><hr>
       <center><h3>Wed</h3></center>
       <p><strong>Pre-lecture reading/exercises</strong> <br>Ch. 20</p>
-      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Recording</strong> <a href="http://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
       <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
       <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
       <center><h3>Thu</h3></center>
       <p><strong>Pre-lecture reading/exercises</strong> <br>None</p>
-      <p><strong>Recording</strong> <a href="https://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
+      <p><strong>Recording</strong> <a href="http://utoronto.zoom.us/rec/play/w5Ims_xwzyJUVhutTMqNBT0caqXCWYyMWx5X-FJvA1dFPpCrjdO8V5osw6hsxEM74HVTmX9jZ2jdwCLj.qvnXbtIQPChGF0bo">Zoom</a></p>
       <p><strong>Slide</strong> <a href="../static/Sample.pdf">slides.pdf</a></p>
       <p><strong>Worksheet</strong> <a href="../static/Sample.pdf">worksheet</a> <a href="../static/Sample.pdf">solution</a></p>
     </section>
@@ -220,8 +223,8 @@
   <!--content end-->
   <!--a footer with designers' name and link to Faculty CS UofT-->
   <div id="footer">
-    <p><a href="https://web.cs.toronto.edu/">Faculty of Computer Science at UofT</a></p>
-    <p>Site designed by <strong>Jiale Shang</strong> & <strong>Zechen Lai</strong></p>
+    <p><a href="http://web.cs.toronto.edu">Faculty of Computer Science at UofT</a></p>
+    <p>Site designed by <strong>Jiale Shang</strong> & <strong>Zechen Lai</strong> & <strong>Feilong Qiu</strong></p>
   </div>
 </body>
 </html>

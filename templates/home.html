@@ -11,13 +11,13 @@
   <!-- inspired by https://codepen.io/andornagy/pen/RNeydj-->
   <nav> 
     <!--menu title, change position and font size when it becomes a dropdown menu-->
-    <div id="menu-title">Welcome, {% if type%}<strong>Instructor</strong>{% else %}<strong>Student</strong>{% endif %} {{ name }}</div>
+    <div id="menu-title">Welcome, <strong>{% if type %}Instructor{% else %}Student{% endif %}</strong> {{ name }}</div>
     <!-- dropdown menu for mobile devices-->
     <label for="drop" class="button">≡</label>
     <input type="checkbox" id="drop"/>
     <ul class="menu">
       <li><a href="#top">Home</a></li>
-      <li><a href="https://piazza.com/utoronto.ca/winter2021/cscb63h3slec01/home">Piazza</a></li>
+      <li><a href="http://piazza.com/utoronto.ca/winter2021/cscb63h3slec01/home">Piazza</a></li>
       <li>
         <label for="drop-1" class="button">Course Materials</label>
         <a>Course Materials</a>
@@ -31,14 +31,17 @@
         </ul> 
       </li>
       <li><a href="{{ url_for('labs') }}">Labs</a></li>
-      <li><a href="https://markus.utsc.utoronto.ca/cscb63w21">Markus</a></li>
+      <li><a href="http://markus.utsc.utoronto.ca/cscb63w21">Markus</a></li>
       <li><a href="#course-team">Course Team</a></li>
       <li><label for="drop-2" class="button">Account</label>
         <a>Account</a>
         <!-- dropdown items for "Course Materials"-->
         <input type="checkbox" id="drop-2"/>
         <ul>
-          <li><a href="/logout">logout</a></li>
+          <li><a href="{{ url_for('grade')}}">Grade</a></li>
+          <li><a href="{{ url_for('feedback') }}">Feedback</a></li>
+          <li><a href="{{ url_for('setting') }}">Setting</a></li>
+          <li><a href="/logout">Log out</a></li>
         </ul> 
       </li>
     </ul>
@@ -79,8 +82,8 @@
         </ul>
         <label><strong>Lecture</strong></label>
         <ul>
-          <li><p>Wednesdays 15:00-16:00 <a href="https://utoronto.zoom.us/j/89553548645">Zoom Link</a></p></li>
-          <li><p>Thursdays 9:10-11:00 <a href="https://utoronto.zoom.us/j/83378932991">Zoom Link</a></p></li>
+          <li><p>Wednesdays 15:00-16:00 <a href="http://utoronto.zoom.us/j/89553548645">Zoom Link</a></p></li>
+          <li><p>Thursdays 9:10-11:00 <a href="http://utoronto.zoom.us/j/83378932991">Zoom Link</a></p></li>
         </ul>
       </div>
     </section>
@@ -108,21 +111,21 @@
           <div class="cell">Teaching Assistant</div>
           <div class="cell">Sample1</div>
           <div class="cell">Mon 13:00-16:00; Wed 18:00-20:00</div>
-          <div class="cell"><a href="https://utoronto.zoom.us/j/83378932991">Zoom Link</a></div>
+          <div class="cell"><a href="http://utoronto.zoom.us/j/83378932991">Zoom Link</a></div>
           <div class="cell"><a href="mailto:sample1@mail.utoronto.ca">sample1@mail.utoronto.ca</a></div>
         </div>
         <div class="row">
           <div class="cell">Teaching Assistant</div>
           <div class="cell">Sample2</div>
           <div class="cell">Thu 14:30-17:30; Fri 13:00-16:00</div>
-          <div class="cell"><a href="https://utoronto.zoom.us/j/83378932991">Zoom Link</a></div>
+          <div class="cell"><a href="http://utoronto.zoom.us/j/83378932991">Zoom Link</a></div>
           <div class="cell"><a href="mailto:sample2@mail.utoronto.ca">sample2@mail.utoronto.ca</a></div>
         </div>
         <div class="row">
           <div class="cell">Teaching Assistant</div>
           <div class="cell">Sample3</div>
           <div class="cell">Wed 10:00-13:00; Sun 14:00-18:00</div>
-          <div class="cell"><a href="https://utoronto.zoom.us/j/83378932991">Zoom Link</a></div>
+          <div class="cell"><a href="http://utoronto.zoom.us/j/83378932991">Zoom Link</a></div>
           <div class="cell"><a href="mailto:sample3@mail.utoronto.ca">sample3@mail.utoronto.ca</a></div>
         </div>
       </div>
@@ -263,8 +266,8 @@
   <!--content end-->
   <!--a footer with designers' name and link to Faculty CS UofT-->
   <div id="footer">
-    <p><a href="https://web.cs.toronto.edu/">Faculty of Computer Science at UofT</a></p>
-    <p>Site designed by <strong>Jiale Shang</strong> & <strong>Zechen Lai</strong></p>
+    <p><a href="http://web.cs.toronto.edu">Faculty of Computer Science at UofT</a></p>
+    <p>Site designed by <strong>Jiale Shang</strong> & <strong>Zechen Lai</strong> & <strong>Feilong Qiu</strong></p>
   </div>
 </body>
 </html>

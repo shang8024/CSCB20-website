@@ -11,13 +11,13 @@
   <!-- inspired by https://codepen.io/andornagy/pen/RNeydj-->
   <nav> 
     <!--menu title, change position and font size when it becomes a dropdown menu-->
-    <div id="menu-title">Welcome, {% if type%}<strong>Instructor</strong>{% else %}<strong>Student</strong>{% endif %} {{ name }}</div>
+    <div id="menu-title">Welcome, <strong>{% if type %}Instructor{% else %}Student{% endif %}</strong> {{ name }}</div>
     <!-- dropdown menu for mobile devices-->
     <label for="drop" class="button">≡</label>
     <input type="checkbox" id="drop"/>
     <ul class="menu">
       <li><a href="{{ url_for('home') }}">Home</a></li>
-      <li><a href="https://piazza.com/utoronto.ca/winter2021/cscb63h3slec01/home">Piazza</a></li>
+      <li><a href="http://piazza.com/utoronto.ca/winter2021/cscb63h3slec01/home">Piazza</a></li>
       <li>
         <label for="drop-1" class="button">Course Materials</label>
         <a>Course Materials</a>
@@ -31,14 +31,17 @@
         </ul> 
       </li>
       <li><a href="#top">Labs</a></li>
-      <li><a href="https://markus.utsc.utoronto.ca/cscb63w21">Markus</a></li>
+      <li><a href="http://markus.utsc.utoronto.ca/cscb63w21">Markus</a></li>
       <li><a href="{{ url_for('home', _anchor='course-team') }}">Course Team</a></li>
       <li><label for="drop-2" class="button">Account</label>
         <a>Account</a>
         <!-- dropdown items for "Course Materials"-->
         <input type="checkbox" id="drop-2"/>
         <ul>
-          <li><a href="/logout">logout</a></li>
+          <li><a href="{{ url_for('grade')}}">Grade</a></li>
+          <li><a href="{{ url_for('feedback') }}">Feedback</a></li>
+          <li><a href="{{ url_for('setting') }}">Setting</a></li>
+          <li><a href="/logout">Log out</a></li>
         </ul> 
       </li>
     </ul>
@@ -54,7 +57,7 @@
     <!--first section -- Tutorial Arrangement-->
     <section>
       <h2>Tutorial Sections</h2><hr>
-      <p>Please go the tutorial section that you signed up for on <a href="acorn.utoronto.ca">Acorn</a>.<br>
+      <p>Please go the tutorial section that you signed up for on <a href="http://acorn.utoronto.ca">Acorn</a>.<br>
       For TAs' contact information, see <a href="{{ url_for('home', _anchor='course-team') }}">Course Team</a>.</p>
       <!--TUT infor table-->
       <div class="table">
@@ -137,8 +140,8 @@
   <!--content end-->
   <!--a footer with designers' name and link to Faculty CS UofT-->
   <div id="footer">
-    <p><a href="https://web.cs.toronto.edu/">Faculty of Computer Science at UofT</a></p>
-    <p>Site designed by <strong>Jiale Shang</strong> & <strong>Zechen Lai</strong></p>
+    <p><a href="http://web.cs.toronto.edu">Faculty of Computer Science at UofT</a></p>
+    <p>Site designed by <strong>Jiale Shang</strong> & <strong>Zechen Lai</strong> & <strong>Feilong Qiu</strong></p>
   </div>
 </body>
 </html>
