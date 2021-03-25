@@ -35,7 +35,7 @@ def root():
     if not session.get('logged_in'):
         return render_template('index.html',)
     else:
-        return render_template('home.html',username=session['username'])
+        return render_template('home.html',type=session['type'],name=session['name'])
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -43,6 +43,8 @@ def login():
     user = request.form['username']
     if request.form['password'] == 'password' and user == 'admin':
         session['username'] = user
+        session['name'] = user #记得改成firstname
+        session['type'] = 0 #记得改成user type
         session['logged_in'] = True
         return redirect(url_for('home'))
     else:
@@ -53,19 +55,21 @@ def login():
 def logout():
     session['logged_in'] = False
     session['username'] = None
+    session['type'] = False
+    session['name'] = None
     return root()
 
 @app.route('/home')
 def home():
-    return render_template('home.html',username=session['username'])
+    return render_template('home.html',type=session['type'],name=session['name'])
 
 @app.route('/labs')
 def labs():
-    return render_template('labs.html',username=session['username'])
+    return render_template('labs.html',type=session['type'],name=session['name'])
     
 @app.route('/lectures')
 def lectures():
-    return render_template('lectures.html',username=session['username'])
+    return render_template('lectures.html',type=session['type'],name=session['name'])
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(12)
