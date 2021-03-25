@@ -21,6 +21,7 @@ def query_db(query, args=(),one=False):
     rv = curfetchall()
     cur.close()
     return (rv[0] if rv else None) if one else rv
+
 # tells Flask that "this" is the current running app
 app = Flask(__name__)
 
@@ -58,9 +59,18 @@ def logout():
     session['type'] = False
     session['name'] = None
     return root()
-
+@app.route("/grade")
+def grade():
+    return render_template('grade.html',type=session['type'],name=session['name'])
+@app.route("/setting")
+def setting():
+    return render_template('grade.html',type=session['type'],name=session['name'])
+@app.route("/feedback")
+def feedback():
+    return render_template('grade.html',type=session['type'],name=session['name'])
 @app.route('/home')
 def home():
+    # some code here for updating course team
     return render_template('home.html',type=session['type'],name=session['name'])
 
 @app.route('/labs')
