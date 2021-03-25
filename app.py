@@ -35,12 +35,14 @@ def root():
     if not session.get('logged_in'):
         return render_template('index.html',)
     else:
-        return render_template('home.html')
+        return render_template('home.html',username=session['username'])
 
 @app.route('/login', methods=['POST'])
 def login():
     error = None
-    if request.form['password'] == 'password' and request.form['username'] == 'admin':
+    user = request.form['username']
+    if request.form['password'] == 'password' and user == 'admin':
+        session['username'] = user
         session['logged_in'] = True
         return redirect(url_for('home'))
     else:
@@ -50,19 +52,20 @@ def login():
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
+    session['username'] = None
     return root()
 
 @app.route('/home')
 def home():
-    return render_template('home.html')
+    return render_template('home.html',username=session['username'])
 
 @app.route('/labs')
 def labs():
-    return render_template('labs.html')
+    return render_template('labs.html',username=session['username'])
     
 @app.route('/lectures')
 def lectures():
-    return render_template('lectures.html')
+    return render_template('lectures.html',username=session['username'])
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(12)
