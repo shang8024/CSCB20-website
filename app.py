@@ -66,7 +66,7 @@ def home():
 @app.route('/labs')
 def labs():
     return render_template('labs.html',type=session['type'],name=session['name'])
-    
+
 @app.route('/lectures')
 def lectures():
     return render_template('lectures.html',type=session['type'],name=session['name'])
