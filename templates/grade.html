@@ -77,9 +77,10 @@
               {% elif item['remark'] == -1 %}
                 remarked
               {% else %}
-                <form action="/remark-request">
-                    <input type="submit" value="request a remark" class="btn">
-                </form>
+                <form method="post" action="/grade-remark">
+                    <input type="text" class="remark-content" value="" placeholder="Put your reason for remark here." name="remark_request"/>
+                    <input type="submit" value ="remark" />
+                    <input type="hidden" name="remark_event" value="{{ item['ename'] }}" />
               {% endif %}
               </div>
           </div>
@@ -94,8 +95,5 @@
     <p><a href="http://web.cs.toronto.edu">Faculty of Computer Science at UofT</a></p>
     <p>Site designed by <strong>Jiale Shang</strong> & <strong>Zechen Lai</strong> & <strong>Feilong Qiu</strong></p>
   </div>
-  <script>
-
-  </script>
 </body>
 </html>
