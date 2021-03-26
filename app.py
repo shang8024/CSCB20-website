@@ -4,7 +4,7 @@ from flask import Flask
 from flask import Flask, render_template, request, g, flash, redirect,session, url_for,abort
 import os
 
-DATABSE='./assginment3.db'
+DATABASE='./assignment3.db'
 
 def get_db():
     db=getattr(g,'_database',None)
@@ -18,7 +18,7 @@ def make_dicts(cursor, row):
 
 def query_db(query, args=(),one=False):
     cur = get_db().execute(query,args)
-    rv = curfetchall()
+    rv = cur.fetchall()
     cur.close()
     return (rv[0] if rv else None) if one else rv
 
@@ -36,50 +36,71 @@ def root():
     if not session.get('logged_in'):
         return render_template('index.html',)
     else:
-        return render_template('home.html',type=session['type'],name=session['name'])
+        return render_template('home.html',user=session['user'])
 
 @app.route('/login', methods=['POST'])
 def login():
     error = None
-    user = request.form['username']
-    if request.form['password'] == 'password' and user == 'admin':
-        session['username'] = user
-        session['name'] = user #记得改成firstname
-        session['type'] = 0 #记得改成user type
+    login_name = request.form['username']
+    login_pass = request.form['password']
+    db=get_db()
+    db.row_factory = make_dicts
+    user = query_db('select * from Users where username=?',[login_name],one=True)
+    if user == None:
+        error = 'Invalid username'
+    elif login_pass == user['password']:
         session['logged_in'] = True
+        session['user'] = {
+            "username": user['username'],
+            "name": [user['first_name'],user['last_name']],
+            "type": user['type']
+        }
         return redirect(url_for('home'))
     else:
-        error = 'Invalid redentials'
+        error = 'Invalid password'
+        
     return render_template('index.html',error=error)
 
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
-    session['username'] = None
-    session['type'] = False
-    session['name'] = None
+    session.pop('user',None)
     return root()
+
 @app.route("/grade")
 def grade():
-    return render_template('grade.html',type=session['type'],name=session['name'])
+    db=get_db()
+    db.row_factory = make_dicts
+    grades=[]
+    if(session['user']['type']):
+        # query of getting all the students' grades of the instroctor's classes
+        query = "select username, grade, remark, ename,request from Grades natural join Takes natural join Events where cid in (select cid from Takes where username='%s')" % (session['user']['username'])
+    else:
+        # query of getting all the grades of the student
+        query = "select * from Grades where username='%s'" % (session['user']['username'])
+    for grade in query_db(query):
+        grades.append(grade)
+    db.close()
+    return render_template('grade.html',user=session['user'],grade=grades)
+
 @app.route("/setting")
 def setting():
-    return render_template('grade.html',type=session['type'],name=session['name'])
+    return render_template('grade.html',user=session['user'])
 @app.route("/feedback")
 def feedback():
-    return render_template('grade.html',type=session['type'],name=session['name'])
+    return render_template('grade.html',user=session['user'])
 @app.route('/home')
 def home():
     # some code here for updating course team
-    return render_template('home.html',type=session['type'],name=session['name'])
+    return render_template('home.html',user=session['user'])
 
 @app.route('/labs')
 def labs():
-    return render_template('labs.html',type=session['type'],name=session['name'])
+    return render_template('labs.html',user=session['user'])
 
 @app.route('/lectures')
 def lectures():
-    return render_template('lectures.html',type=session['type'],name=session['name'])
+    return render_template('lectures.html',user=session['user'])
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(12)
