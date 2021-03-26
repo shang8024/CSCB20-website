@@ -1,3 +1,14 @@
+
+
+@app.route('/')
+def root():
+    return render_template('login.html')
+
+
+
+
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     db = get_db()
