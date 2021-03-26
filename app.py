@@ -22,6 +22,21 @@ def query_db(query, args=(),one=False):
     cur.close()
     return (rv[0] if rv else None) if one else rv
 
+def get_grade_table():
+    db=get_db()
+    db.row_factory = make_dicts
+    grades=[]
+    if(session['user']['type']):
+        # query of getting all the students' grades of the instroctor's classes
+        query = "select username, grade, remark, ename,request from Grades natural join Takes natural join Events where cid in (select cid from Takes where username='%s')" % (session['user']['username'])
+    else:
+        # query of getting all the grades of the student
+        query = "select * from Grades natural join Events where username='%s'" % (session['user']['username'])
+    for grade in query_db(query):
+        grades.append(grade)
+    db.close()
+    return grades
+
 # tells Flask that "this" is the current running app
 app = Flask(__name__)
 
@@ -68,18 +83,19 @@ def logout():
 
 @app.route("/grade")
 def grade():
+    grades=get_grade_table()
+    return render_template('grade.html',user=session['user'],grade=grades)
+
+@app.route("/grade-remark", methods=['POST'])
+def request_remark():
     db=get_db()
     db.row_factory = make_dicts
-    grades=[]
-    if(session['user']['type']):
-        # query of getting all the students' grades of the instroctor's classes
-        query = "select username, grade, remark, ename,request from Grades natural join Takes natural join Events where cid in (select cid from Takes where username='%s')" % (session['user']['username'])
-    else:
-        # query of getting all the grades of the student
-        query = "select * from Grades natural join Events where username='%s'" % (session['user']['username'])
-    for grade in query_db(query):
-        grades.append(grade)
-    db.close()
+    remark_req = request.form['remark_request']
+    remark_eve = request.form['remark_event']
+    query = "update Grades set remark=1, request='%s' where username='%s' and eid in (select eid from Events where ename='%s')" % (remark_req,session['user']['username'],remark_eve)
+    query_db(query)
+    db.commit()
+    grades=get_grade_table()
     return render_template('grade.html',user=session['user'],grade=grades)
 
 @app.route("/setting")
