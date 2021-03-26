@@ -58,7 +58,6 @@ def login():
         return redirect(url_for('home'))
     else:
         error = 'Invalid password'
-        
     return render_template('index.html',error=error)
 
 @app.route("/logout")
@@ -77,7 +76,7 @@ def grade():
         query = "select username, grade, remark, ename,request from Grades natural join Takes natural join Events where cid in (select cid from Takes where username='%s')" % (session['user']['username'])
     else:
         # query of getting all the grades of the student
-        query = "select * from Grades where username='%s'" % (session['user']['username'])
+        query = "select * from Grades natural join Events where username='%s'" % (session['user']['username'])
     for grade in query_db(query):
         grades.append(grade)
     db.close()
