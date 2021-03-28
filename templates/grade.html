@@ -58,6 +58,7 @@
       <h2>Grades</h2><hr>
       <!--only instructors can enter grades of students-->
       {% if user['type'] %}
+      <label for="grading">Enter a grade of your student:</label>
       <form action="/grading" method="POST">
         <input list="students" name="student" placeholder="username" id="student">
         <datalist id="students">
@@ -88,7 +89,7 @@
             {% if item['remark'] == 1 %}
                 <div class="dropdown">
                     <span style="color:red">Remark</span>
-                    <div class="dropdown-content"><p>{{ item['request'] }}</p></div>
+                    <div class="dropdown-content">{{ item['request'] }}</div>
                 </div>
             {% elif item['remark'] == -1 %}
                 remarked
@@ -135,26 +136,28 @@
   <script>
     var users = JSON.parse('{{ user | tojson | safe}}');
     var grades = JSON.parse('{{ grade | tojson | safe}}');
-    
+    var students = JSON.parse('{{ student | tojson | safe}}');
     function option_list(){
         let l1= document.getElementById('students');
         let l2 = document.getElementById('events');
         let buff1=[];
         let buff2=[];
-        for (i=0; i< grades.length; i++) {
-            a = grades[i]['username'];
+        for (i=0; i< grades.length; i++) {   
             b = grades[i]['ename'];
-            if ( ! buff1.includes(a)) {
-                buff1.push(a);
-                let op = document.createElement('option');
-                op.setAttribute('value',a);
-                l1.appendChild(op);
-            };
             if ( ! buff2.includes(b)) {
                 buff2.push(b);
                 let op = document.createElement('option');
                 op.setAttribute('value',b);
                 l2.appendChild(op);
+            };
+        };
+        for (i=0;i<students.length;i++){
+            a = students[i]['username'];
+            if ( ! buff1.includes(a)) {
+                buff1.push(a);
+                let op = document.createElement('option');
+                op.setAttribute('value',a);
+                l1.appendChild(op);
             };
         };
     };
