@@ -75,6 +75,37 @@ def login():
         error = 'Invalid password'
     return render_template('index.html',error=error)
 
+
+@app.route('/signup',methods=['GET', 'POST'])
+def signup():
+    db = get_db()
+    db.row_factory = make_dicts
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'first_name' in request.form and 'last_name' in request.form and 'utorid' in request.form and 'class' in request.form:
+        curr_username = request.form['username']
+        curr_f_name = request.form['first_name']
+        curr_l_name = request.form['last_name']
+        curr_utorid = request.form['utorid'] #currently set to email address
+        curr_class = request.form['class']
+        curr_ps = request.form['password']
+
+        sql_username = query_db('select username from Users where username=?', [curr_username], one=True)
+        #sql_uid = query_db('select username from Users where utorid=?', [curr_utorid], one=True)
+        if(sql_username == None): #and #sql_uid == None):
+            #insert our new User info:
+            print(sql_username)
+            #print(sql_uid)
+            data = [curr_username, curr_f_name, curr_l_name, curr_ps, curr_utorid, curr_class]
+            db.execute('INSERT INTO Users (username,first_name,last_name,password,email,type) VALUES (?,?,?,?,?,?)', (*data,))#(curr_username,curr_f_name,curr_l_name,curr_ps,curr_class))
+            db.commit()
+            db.close()
+            return render_template('login.html')
+    else:
+        msg = 'Please fill out the form!'
+        render_template('signup.html')
+
+
+
+
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
