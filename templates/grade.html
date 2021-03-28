@@ -58,15 +58,50 @@
       <h2>Grades</h2><hr>
       <!--only instructors can enter grades of students-->
       {% if user['type'] %}
-      <form action="/grading">
+      <form action="/grading" method="POST">
+        <input list="students" name="student" placeholder="username" id="student">
+        <datalist id="students">
+        </datalist>
+        <input list="events" name="event" placeholder="type" id="event">
+        <datalist id="events">
+                       
+        </datalist>
+        <input type="number" name="grade" placeholder="grade" min="0" max="100">
+        <input type="submit" value="submit">
       </form>
+      {% if error %}
+        <p class=error>{{ error }}</p>
+      {% endif %}
+      <div class="table" id="grade-table">
+        <div class="heading">
+            <div class="cell" id="student-sort">Student</div>
+            <div class="cell" id="type-sort">Type</div>
+            <div class="cell" id="grade-sort">Grade</div>
+            <div class="cell" id="remark-sort" ><a href="/remark-sort">Remark</a></div>
+        </div>
+        {% for item in grade %}
+        <div class="row">
+            <div class="cell">{{ item['username'] }}</div>
+            <div class="cell">{{ item['ename'] }}</div>
+            <div class="cell">{{ item['grade'] }}</div>
+            <div class="cell">
+            {% if item['remark'] == 1 %}
+                <div class="dropdown">
+                    <span style="color:red">Remark</span>
+                    <div class="dropdown-content"><p>{{ item['request'] }}</p></div>
+                </div>
+            {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+      </div>
       {% else %}
       <div class="table">
-          <div class="heading">
-              <div class="cell">Type</div>
-              <div class="cell">Grade</div>
-              <div class="cell">Remark</div>
-          </div>
+        <div class="heading">
+          <div class="cell">Type</div>
+          <div class="cell">Grade</div>
+          <div class="cell">Remark</div>
+        </div>
           {% for item in grade %}
           <div class="row">
               <div class="cell">{{ item['ename'] }}</div>
@@ -78,9 +113,9 @@
                 remarked
               {% else %}
                 <form method="post" action="/grade-remark">
-                    <input type="text" class="remark-content" value="" placeholder="Put your reason for remark here." name="remark_request"/>
-                    <input type="submit" value ="remark" />
-                    <input type="hidden" name="remark_event" value="{{ item['ename'] }}" />
+                    <input type="text" class="remark-content" value="" placeholder="Put your reason for remark here." name="remark_request">
+                    <input type="submit" value ="remark">
+                    <input type="hidden" name="remark_event" value="{{ item['ename'] }}">
               {% endif %}
               </div>
           </div>
@@ -95,5 +130,49 @@
     <p><a href="http://web.cs.toronto.edu">Faculty of Computer Science at UofT</a></p>
     <p>Site designed by <strong>Jiale Shang</strong> & <strong>Zechen Lai</strong> & <strong>Feilong Qiu</strong></p>
   </div>
+  <script>
+    var users = JSON.parse('{{ user | tojson | safe}}');
+    var grades = JSON.parse('{{ grade | tojson | safe}}');
+    
+    function option_list(){
+        let l1= document.getElementById('students');
+        let l2 = document.getElementById('events');
+        let buff1=[];
+        let buff2=[];
+        for (i=0; i< grades.length; i++) {
+            a = grades[i]['username'];
+            b = grades[i]['ename'];
+            if ( ! buff1.includes(a)) {
+                buff1.push(a);
+                let op = document.createElement('option');
+                op.setAttribute('value',a);
+                l1.appendChild(op);
+            };
+            if ( ! buff2.includes(b)) {
+                buff2.push(b);
+                let op = document.createElement('option');
+                op.setAttribute('value',b);
+                l2.appendChild(op);
+            };
+        };
+    };
+    function remark_sorted(){
+        let remark=1;
+        for (i=0;i<grades.length;i++){
+            if(grades[i].remark != 1){
+                remark=0;
+            };
+        };
+        return remark;
+    };
+    option_list();
+    let x=document.getElementById('remark-sort');
+    if (remark_sorted()){
+        x.innerHTML="<a href='/grade'>Remark</a>"
+    }else{
+        x.innerHTML="<a href='/remark-sort'>Remark</a>"
+    }
+
+  </script>
 </body>
 </html>
