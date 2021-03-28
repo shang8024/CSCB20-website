@@ -53,26 +53,29 @@ def root():
     else:
         return render_template('home.html',user=session['user'])
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET','POST'])
 def login():
     error = None
-    login_name = request.form['username']
-    login_pass = request.form['password']
-    db=get_db()
-    db.row_factory = make_dicts
-    user = query_db('select * from Users where username=?',[login_name],one=True)
-    if user == None:
-        error = 'Invalid username'
-    elif login_pass == user['password']:
-        session['logged_in'] = True
-        session['user'] = {
-            "username": user['username'],
-            "name": [user['first_name'],user['last_name']],
-            "type": user['type']
-        }
+    if request.method=='POST':
+        login_name = request.form['username']
+        login_pass = request.form['password']
+        db=get_db()
+        db.row_factory = make_dicts
+        user = query_db('select * from Users where username=?',[login_name],one=True)
+        if user == None:
+            error = 'Invalid username'
+        elif login_pass == user['password']:
+            session['logged_in'] = True
+            session['user'] = {
+                'username': user['username'],
+                'name': [user['first_name'],user['last_name']],
+                'type': user['type']
+            }
+            return redirect(url_for('home'))
+        else:
+            error = 'Invalid password'
+    elif 'user' in session:
         return redirect(url_for('home'))
-    else:
-        error = 'Invalid password'
     return render_template('index.html',error=error)
 
 
@@ -106,15 +109,13 @@ def signup():
 
 
 
-@app.route("/logout")
-def logout():
-    session['logged_in'] = False
-    session.pop('user',None)
-    return root()
-
 @app.route("/grade")
 def grade():
-    grades=get_grade_table()
+    if not 'user' in session:
+        return render_template('index.html')
+    db=get_db()
+    db.row_factory = make_dicts
+    grades = get_grade_table()
     return render_template('grade.html',user=session['user'],grade=grades)
 
 @app.route("/grade-remark", methods=['POST'])
@@ -126,26 +127,56 @@ def request_remark():
     query = "update Grades set remark=1, request='%s' where username='%s' and eid in (select eid from Events where ename='%s')" % (remark_req,session['user']['username'],remark_eve)
     query_db(query)
     db.commit()
-    grades=get_grade_table()
+    db.close() 
+    return redirect(url_for('grade'))
+
+@app.route("/grading", methods=['POST'])
+def grading():
+    error=None
+    student=request.form['student']
+    user=session['user']['username']
+    event=request.form['event']
+    grade=request.form['grade']
+    db=get_db()
+    db.row_factory = make_dicts
+    if (not grade) or (not student) or (not event):
+        error = "None of grade,username and type can be empty."
+        return render_template('grade.html',user=session['user'],grade=get_grade_table(),error=error)
+    if not query_db("select * from Takes where username='%s' and cid in (select cid from Takes where username='%s')" % (student,user)):
+        error = "The student is not in your class."
+    return render_template('grade.html',user=session['user'],grade=get_grade_table(),error=error)
+
+@app.route("/remark-sort")
+def remark_sort():
+    db=get_db()
+    db.row_factory = make_dicts
+    grades=[]
+    for grade in query_db("select distinct username, grade, remark, ename,request from Grades natural join Takes natural join Events where remark=1 and cid in (select cid from Takes where username='%s')" % (session['user']['username'])):
+        grades.append(grade)
+    db.close()
     return render_template('grade.html',user=session['user'],grade=grades)
 
 @app.route("/setting")
 def setting():
+    if not 'user' in session:
+        return render_template('index.html')
     return render_template('grade.html',user=session['user'])
 @app.route("/feedback")
 def feedback():
+    if not 'user' in session:
+        return render_template('index.html')
     return render_template('grade.html',user=session['user'])
-@app.route('/home')
-def home():
-    # some code here for updating course team
-    return render_template('home.html',user=session['user'])
 
 @app.route('/labs')
 def labs():
+    if not 'user' in session:
+        return render_template('index.html')
     return render_template('labs.html',user=session['user'])
 
 @app.route('/lectures')
 def lectures():
+    if not 'user' in session:
+        return render_template('index.html')
     return render_template('lectures.html',user=session['user'])
 
 if __name__ == "__main__":
