@@ -117,8 +117,11 @@ def grade():
         return render_template('index.html')
     db=get_db()
     db.row_factory = make_dicts
+    students = []
+    for student in query_db("select * from Takes natural join Users where type=0 and cid in (select cid from Takes where username='%s')" % (session['user']['username'])):
+        students.append(student)
     grades = get_grade_table()
-    return render_template('grade.html',user=session['user'],grade=grades)
+    return render_template('grade.html',user=session['user'],grade=grades,student=students)
 
 @app.route("/grade-remark", methods=['POST'])
 def request_remark():
@@ -141,14 +144,17 @@ def grading():
     grade=request.form['grade']
     db=get_db()
     db.row_factory = make_dicts
+    students = []
+    for student in query_db("select * from Takes natural join Users where type=0 and cid in (select cid from Takes where username='%s')" % (session['user']['username'])):
+        students.append(student)
     if (not grade) or (not student) or (not event):
         # some of grade,student or event type inputs are None, return with error
         error = "None of grade,username and type can be empty."
-        return render_template('grade.html',user=session['user'],grade=get_grade_table(),error=error)
+        return render_template('grade.html',user=session['user'],grade=get_grade_table(),error=error,student=students)
     if not query_db("select * from Takes where username='%s' and cid in (select cid from Takes where username='%s')" % (student,user)):
         # student does not exist or is not in the instructors' class.
         error = "The student is not in your class."
-        return render_template('grade.html',user=session['user'],grade=get_grade_table(),error=error)
+        return render_template('grade.html',user=session['user'],grade=get_grade_table(),error=error,student=students)
     grades=query_db("select * from Grades where username='%s' and ename='%s'" % (student,event),one=True)
     if not grades:
         # grade(student,event) does not exist
@@ -164,7 +170,7 @@ def grading():
             grades['remark'] = -1
         query_db("update Grades set remark=%d, grade=%s where ename='%s' and username='%s'" % (grades['remark'],grade,event,student))
     db.commit()
-    return render_template('grade.html',user=session['user'],grade=get_grade_table(),error=error)
+    return render_template('grade.html',user=session['user'],student=students,grade=get_grade_table(),error=error)
 
 @app.route("/remark-sort")
 def remark_sort():
@@ -173,8 +179,11 @@ def remark_sort():
     grades=[]
     for grade in query_db("select distinct username, grade, remark, ename,request from Grades natural join Takes natural join Events where remark=1 and cid in (select cid from Takes where username='%s')" % (session['user']['username'])):
         grades.append(grade)
+    students = []
+    for student in query_db("select * from Takes natural join Users where type=0 and cid in (select cid from Takes where username='%s')" % (session['user']['username'])):
+        students.append(student)
     db.close()
-    return render_template('grade.html',user=session['user'],grade=grades)
+    return render_template('grade.html',user=session['user'],grade=grades,student=students)
 
 @app.route("/setting")
 def setting():
