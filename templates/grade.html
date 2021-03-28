@@ -90,6 +90,8 @@
                     <span style="color:red">Remark</span>
                     <div class="dropdown-content"><p>{{ item['request'] }}</p></div>
                 </div>
+            {% elif item['remark'] == -1 %}
+                remarked
             {% endif %}
             </div>
         </div>
