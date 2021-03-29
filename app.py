@@ -22,7 +22,6 @@ def query_db(query, args=(),one=False):
     cur.close()
     return (rv[0] if rv else None) if one else rv
 
-
 def get_grade_table():
     db=get_db()
     db.row_factory = make_dicts
@@ -73,6 +72,7 @@ def grade_changes(student,event,grade):
         query_db("update Grades set remark=%d, grade=%s where ename='%s' and username='%s'" % (grades['remark'],grade,event,student))
     db.commit()
 
+
 # tells Flask that "this" is the current running app
 app = Flask(__name__)
 
@@ -117,6 +117,7 @@ def login():
 def logout():
     session.pop('user',None)
     return redirect(url_for('home'))
+    
 @app.route('/signup',methods=['GET', 'POST'])
 def signup():
     db = get_db()
