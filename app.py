@@ -22,20 +22,36 @@ def query_db(query, args=(),one=False):
     cur.close()
     return (rv[0] if rv else None) if one else rv
 
+
 def get_grade_table():
     db=get_db()
     db.row_factory = make_dicts
     grades=[]
     if(session['user']['type']):
         # query of getting all the students' grades of the instroctor's classes
-        query = "select username, grade, remark, ename,request from Grades natural join Takes natural join Events where cid in (select cid from Takes where username='%s')" % (session['user']['username'])
+        query = "select username, grade, remark, ename,request from Grades natural join Takes where cid in (select cid from Takes where username='%s')" % (session['user']['username'])
     else:
         # query of getting all the grades of the student
-        query = "select * from Grades natural join Events where username='%s'" % (session['user']['username'])
+        query = "select * from Grades where username='%s'" % (session['user']['username'])
     for grade in query_db(query):
         grades.append(grade)
     db.close()
     return grades
+
+def get_student_table():
+    db=get_db()
+    db.row_factory = make_dicts
+    students=[]
+    for i in query_db("select username from Takes natural join Users where type=0 and cid in (select cid from Takes where username='%s')" % (session['user']['username'])):
+        students.append(i)
+    return students
+def get_event_table():
+    db=get_db()
+    db.row_factory = make_dicts
+    events=[]
+    for j in query_db('select * from Events'):
+        events.append(j)
+    return events
 
 def grade_changes(student,event,grade):
     user=session['user']['username']
@@ -56,7 +72,6 @@ def grade_changes(student,event,grade):
             grades['remark'] = -1
         query_db("update Grades set remark=%d, grade=%s where ename='%s' and username='%s'" % (grades['remark'],grade,event,student))
     db.commit()
-
 
 # tells Flask that "this" is the current running app
 app = Flask(__name__)
@@ -133,38 +148,67 @@ def signup():
 def grade():
     if not 'user' in session:
         return redirect(url_for('home'))
-    students = []
-    grades=[]
     db=get_db()
     db.row_factory = make_dicts
-    for student in query_db("select * from Takes natural join Users where type=0 and cid in (select cid from Takes where username='%s')" % (session['user']['username'])):
-        students.append(student)
+    students=get_student_table()
+    events=get_event_table()
     grades = get_grade_table()
-    return render_template('grade.html',user=session['user'],grade=grades,student=students)
+    return render_template('grade.html',event=events,user=session['user'],grade=grades,student=students)
 
-@app.route("/grade-remark", methods=['POST'])
+@app.route("/search-grade",methods=['GET','POST'])
+def search_grade():
+    if not 'user' in session:
+        return redirect(url_for('home'))
+    if request.method == 'GET':
+        db=get_db()
+        db.row_factory = make_dicts
+        students=get_student_table()
+        events=get_event_table()
+        student=request.args.get('search-student')
+        event=request.args.get('search-event')
+        grade=request.args.get('search-grade')
+        query="select username, grade, remark, ename,request from Grades natural join Takes natural join Events where ename='%s' and cid in (select cid from Takes where username='%s')" % (event,session['user']['username'])
+        if grade:
+            query += " and grade=%s" % (grade)
+        if student:
+            query += " and username='%s'" % (student)
+        grades=[]
+        for i in query_db(query):
+            grades.append(i)
+        db.close()
+        return render_template('grade.html',event=events,user=session['user'],grade=grades,student=students)
+    else:
+        return redirect(url_for('grade'))
+
+@app.route("/grade-remark",methods=['GET','POST'])
 def request_remark():
     if not 'user' in session:
         return redirect(url_for('home'))
-    db=get_db()
-    db.row_factory = make_dicts
-    remark_req = request.form['remark_request']
-    remark_eve = request.form['remark_event']
-    query = "update Grades set remark=1, request='%s' where username='%s' and ename='%s'" % (remark_req,session['user']['username'],remark_eve)
-    query_db(query)
-    db.commit()
-    db.close() 
+    else:
+        db=get_db()
+        db.row_factory = make_dicts
+        remark_req = request.form['remark_request']
+        remark_eve = request.form['remark_event']
+        user=session['user']['username']
+        query_db("update Grades set remark=?, request=? where username=? and ename=?",[1,remark_req,user,remark_eve])
+        db.commit()
+        db.close()
     return redirect(url_for('grade'))
 
-@app.route("/grading",methods=['POST'])
+@app.route("/grading",methods=['GET','POST'])
 def grading():
     if not 'user' in session:
         return redirect(url_for('home'))
     if request.method == 'POST':
-        json_data = request.json['changes']
-        for item in json_data:
-            grading(item['name'],item['type'],item['grad'])
-    return redirect(url_for('grade'))
+        db=get_db()
+        db.row_factory = make_dicts
+        changes = request.json['changes']
+        deletes = request.json['deletes']
+        for item in changes:
+            grade_changes(item['name'],item['type'],item['grad'])
+        db.commit()
+        db.close()
+    return redirect(url_for('home'))
 
 @app.route("/remark-sort")
 def remark_sort():
@@ -173,13 +217,12 @@ def remark_sort():
     db=get_db()
     db.row_factory = make_dicts
     grades=[]
-    for grade in query_db("select distinct username, grade, remark, ename,request from Grades natural join Takes natural join Events where remark=1 and cid in (select cid from Takes where username='%s')" % (session['user']['username'])):
+    for grade in query_db("select distinct username, grade, remark, ename,request from Grades natural join Takes where remark=1 and cid in (select cid from Takes where username='%s')" % (session['user']['username'])):
         grades.append(grade)
-    students = []
-    for student in query_db("select * from Takes natural join Users where type=0 and cid in (select cid from Takes where username='%s')" % (session['user']['username'])):
-        students.append(student)
+    students=get_student_table()
+    events=get_event_table()
     db.close()
-    return render_template('grade.html',user=session['user'],grade=grades,student=students)
+    return render_template('grade.html',user=session['user'],grade=grades,student=students,event=events)
 
 @app.route("/setting")
 def setting():
