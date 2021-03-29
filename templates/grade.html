@@ -54,37 +54,38 @@
       <h1>CSCB63</h1>
       <p>Design and Analysis of Data Structures</p>
     </div>
-
+    {% if user['type'] %}
     <section>
       <!--only instructors can enter grades of students-->
-      {% if user['type'] %}
+      <!-- --------------------------------------------------------------------------// -->
+      <h2>Template Changes</h2><hr>
       <label for="grading">Enter a grade of your student:</label>
       <!-- <form action="/grading" method="POST"> -->
       <input list="students" name="student" placeholder="username" id="student">
       <datalist id="students">
       </datalist>
       <input list="events" name="event" placeholder="type" id="event">
-      <datalist id="events">
-                      
+      <datalist id="events">                  
       </datalist>
       <input type="number" name="grade" placeholder="grade" min="0" max="100" id="grade">
       <button onclick="appendTemp()">Add to Temp</button>
-      <!-- --------------------------------------------------------------------------// -->
-      <h2>Template Grades Changes</h2><hr>
+      <button onclick="archiveTemp()" type="float:right">Submit changes</button>
+      <p id="error"></p>
       <div class="table" id="temp-table">
-        <div class="heading">
-          <div class="cell" id="student-sort">Student</div>
-          <div class="cell" id="type-sort">Type</div>
-          <div class="cell" id="grade-sort">Grade</div>
-        </div>
       </div>
       <!-- --------------------------------------------------------------------------// -->
       <!-- </form> -->
-      <button onclick="archiveTemp()">submit</button>
-      {% if error %}
-        <p class=error>{{ error }}</p>
-      {% endif %}
+    </section>
+    <section>
       <h2>Student Grades</h2><hr>
+      <form action="/search-grade" method='GET'>
+        <input type="text" name="search-student" value="" placeholder="username">
+        <select id="search-event" name="search-event">
+
+        </select>
+        <input type="number" name="search-grade" value="" min="0" max="100" placeholder="grade">
+        <input type="submit" value="Search">
+      </form>
       <div class="table" id="grade-table">
         <div class="heading">
             <div class="cell" id="student-sort">Student</div>
@@ -92,6 +93,7 @@
             <div class="cell" id="grade-sort">Grade</div>
             <div class="cell" id="remark-sort" ><a href="/remark-sort">Remark</a></div>
         </div>
+        
         {% for item in grade %}
         <div class="row">
             <div class="cell">{{ item['username']  }}</div>
@@ -110,7 +112,10 @@
         </div>
         {% endfor %}
       </div>
-      {% else %}
+    </section>
+    {% else %}
+    <section>
+      <h2>Grade</h2><hr>
       <div class="table">
         <div class="heading">
           <div class="cell">Type</div>
@@ -130,14 +135,14 @@
                 <form method="post" action="/grade-remark">
                     <input type="text" class="remark-content" value="" placeholder="Put your reason for remark here." name="remark_request">
                     <input type="submit" value ="remark">
-                    <input type="hidden" value=1 name="remark_event" value="{{ item['ename'] }}">
+                    <input type="hidden" name="remark_event" value="{{ item['ename'] }}">
               {% endif %}
               </div>
           </div>
           {% endfor %}
       </div>
-      {% endif %}
     </section>
+    {% endif %}
   </div>
   <!--content end-->
   <!--a footer with designers' name and link to Faculty CS UofT-->
@@ -149,12 +154,39 @@
     let users = JSON.parse('{{ user | tojson | safe}}');
     let grades = JSON.parse('{{ grade | tojson | safe}}');
     let students = JSON.parse('{{ student | tojson | safe}}');
+    let events = JSON.parse('{{ event | tojson | safe}}');
     //-------------------------------------------------
     const log = console.log
     let newGrade = []
+    let deleteGrade = []
+    const tempTable = document.getElementById("temp-table");
+    const gradeTable = document.getElementById("grade-table");
     //let newRemark = []
+    function renderTemp(){
+      tempTable.innerHTML=
+        `<div class="heading">
+          <div class="cell">Student</div>
+          <div class="cell">Type</div>
+          <div class="cell">Grade</div>
+          <div class="cell"></div>
+        </div>`;
+      for (i=0;i<newGrade.length;i++){
+        addTemprow(newGrade[i].name,newGrade[i].type,newGrade[i].grad,i);
+      };
+    };
+    function renderTable(){
+      
+    };
+    function addTemprow(stdName,assType,assGrad,i){
+      tempTable.innerHTML+=
+              `<div class="row">
+                <div class="cell">`+stdName+`</div>
+                <div class="cell">`+assType+`</div>
+                <div class="cell">`+assGrad+`</div>
+                <div class="cell"><a class="remove-temp" onclick="remove_row('`+stdName+`','`+assType+`')">X</a></div>
+              </div>`
+    };
     function appendTemp() {
-      const tempTable = document.getElementById("temp-table");
       const stdName = document.getElementById("student").value;
       const assType = document.getElementById("event").value;
       const assGrad = document.getElementById("grade").value;
@@ -162,77 +194,90 @@
       if (!isDataValid(stdName, assType, assGrad)){
         return
       }
-      if (isDataExists(stdName, assType, newGrade)){
-        log("shit, not this again") // name+event already inside table
-        return
-      }
-
-      const data = {
+      if (!isDataExists(stdName, assType, newGrade,assGrad)){
+        const data = {
         name: stdName,
         type: assType,
         grad: assGrad
-      }
-      newGrade.push(data);
-      
-      tempTable.innerHTML+=
-        `<div class="row">
-          <div class="cell">`+stdName+`</div>
-          <div class="cell">`+assType+`</div>
-          <div class="cell">`+assGrad+`</div>
-        </div>`
-      
-      log(newGrade)
+        };
+        newGrade.push(data);
+      };
+      renderTemp();
     };
-
+    function getXmlDoc(){
+      var xmlDoc;
+      if(window.XMLHttpRequest){
+        xmlDoc = new XMLHttpRequest();
+      }else{
+        xmlDoc = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      return xmlDoc;
+    }
     function archiveTemp() { // or submit Temp
+      let er=document.getElementById('error');
       // append newGrade to db
       if (newGrade.length == 0){
-        console.log('You must submit at least one grade')
+        er.innerHTML="You must submit at least one grade."
       }else{
-        console.log(JSON.stringify(newGrade));
-        $.ajax({
-          type:'POST',
-          url: "/grading",
-          dataType: 'json',
-          contentType: 'application/json; charset=utf-8',
-          data: JSON.stringify({changes: newGrade})
-        });
+        var xmlDoc = getXmlDoc();
+        xmlDoc.open('POST','/grading',true);
+        xmlDoc.setRequestHeader("Content-type","application/json");
+        xmlDoc.send(JSON.stringify({changes: newGrade,deletes: deleteGrade}));
+        er.innerHTML="Grade changes sussessfully."
       };
-      // find and change newRemark in db
     };
     function isDataValid(name, type, grad) {
+      let er=document.getElementById('error');
       if(name == "" || type == "" || grad == ""){
-        log("something empty")
+        er.innerHTML="None of the inputs can be empty."
         return false
       }else if (isNaN(grad) || 100 < grad || grad < 0){
-        log("grad not number or not in range: "+ grad)
+        er.innerHTML =`Grade not number or not in range: `+grad+`.`
         return false
-      }
-      // }else if (grad){ //name not in list
-      //   return false
-      // }
-      return true
+      };
+      for (i=0;i<students.length;i++){
+        if(students[i].username == name){
+          return true
+        }
+      };
+      er.innerHTML=`The student is not in your class.`
+      return false
     }
-    function isDataExists(name, type ,list){
+    function isDataExists(name, type ,list,grad){
       for (i = 0; i < list.length; i++) {
         if (list[i]['name'] == name && list[i]['type'] == type) {
-          return true;
+          list[i]['grad'] =  grad
+          return true
         }
       }
     }
+    function remove_row(name,type){
+      let buff=[];
+      for (i=0;i<newGrade.length;i++){
+        if(newGrade[i].type != type || newGrade[i].name !=name){
+          buff.push(newGrade[i]);
+        };
+      };
+      newGrade=buff;
+      renderTemp();
+    }
+
     //------------------------------------------------
     function option_list(){
         let l1= document.getElementById('students');
         let l2 = document.getElementById('events');
+        let l3 = document.getElementById('search-event');
         let buff1=[];
         let buff2=[];
-        for (i=0; i< grades.length; i++) {   
-            b = grades[i]['ename'];
+        for (i=0; i< events.length; i++) {   
+            b = events[i]['ename'];
             if ( ! buff2.includes(b)) {
                 buff2.push(b);
                 let op = document.createElement('option');
                 op.setAttribute('value',b);
                 l2.appendChild(op);
+                l3.innerHTML+=
+                `<option value="`+b+`">`+b+`</option>`
             };
         };
         for (i=0;i<students.length;i++){
@@ -242,6 +287,7 @@
                 let op = document.createElement('option');
                 op.setAttribute('value',a);
                 l1.appendChild(op);
+                
             };
         };
     };
@@ -254,14 +300,16 @@
         };
         return remark;
     };
-    option_list();
-    let x=document.getElementById('remark-sort');
-    if (remark_sorted()){
-        x.innerHTML="<a href='/grade'>Remark</a>"
-    }else{
-        x.innerHTML="<a href='/remark-sort'>Remark</a>"
-    }
-    
+    if(users.type){
+      option_list();
+      renderTemp();
+      let x=document.getElementById('remark-sort');
+      if (remark_sorted()){
+          x.innerHTML="<a href='/grade'>Remark</a>"
+      }else{
+          x.innerHTML="<a href='/remark-sort'>Remark</a>"
+      };
+    };
   </script>
 </body>
 </html>
