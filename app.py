@@ -1,7 +1,7 @@
 # required imports
 import sqlite3
 from flask import Flask
-from flask import Flask, render_template, request, g, flash, redirect,session, url_for,abort
+from flask import Flask, jsonify,render_template, request, g, flash, redirect,session, url_for,abort
 import os
 
 DATABASE='./assignment3.db'
@@ -36,6 +36,27 @@ def get_grade_table():
         grades.append(grade)
     db.close()
     return grades
+
+def grade_changes(student,event,grade):
+    user=session['user']['username']
+    db=get_db()
+    db.row_factory = make_dicts
+    grades=query_db("select * from Grades where username='%s' and ename='%s'" % (student,event),one=True)
+    if not grades:
+        # grade(student,event) does not exist
+        # insert event to Events(ename) if not exist
+        query_db("insert into Events(ename) select '%s' where not exists(select 1 from Events where ename='%s')" % (event,event))
+        db.commit()
+        # insert value(student,event,grade,0) into Events(username,ename,grade,remark)
+        query_db("insert into Grades(username,ename,grade,remark) values('%s','%s',%s,0)" % (student,event,grade)) 
+    else:
+        # grade(student,event) exist, update existing row.
+        if grades['remark'] == 1:
+            # if the student is requesting a remark for that grade, set the remark status to 'remarked'
+            grades['remark'] = -1
+        query_db("update Grades set remark=%d, grade=%s where ename='%s' and username='%s'" % (grades['remark'],grade,event,student))
+    db.commit()
+
 
 # tells Flask that "this" is the current running app
 app = Flask(__name__)
@@ -108,16 +129,14 @@ def signup():
         msg = 'Please fill out the form!'
         render_template('signup.html')
 
-
-
-
-@app.route("/grade")
+@app.route("/grade",methods=['GET','POST'])
 def grade():
     if not 'user' in session:
-        return render_template('index.html')
+        return redirect(url_for('home'))
+    students = []
+    grades=[]
     db=get_db()
     db.row_factory = make_dicts
-    students = []
     for student in query_db("select * from Takes natural join Users where type=0 and cid in (select cid from Takes where username='%s')" % (session['user']['username'])):
         students.append(student)
     grades = get_grade_table()
@@ -125,6 +144,8 @@ def grade():
 
 @app.route("/grade-remark", methods=['POST'])
 def request_remark():
+    if not 'user' in session:
+        return redirect(url_for('home'))
     db=get_db()
     db.row_factory = make_dicts
     remark_req = request.form['remark_request']
@@ -135,45 +156,20 @@ def request_remark():
     db.close() 
     return redirect(url_for('grade'))
 
-@app.route("/grading", methods=['POST'])
+@app.route("/grading",methods=['POST'])
 def grading():
-    error=None
-    student=request.form['student']
-    user=session['user']['username']
-    event=request.form['event']
-    grade=request.form['grade']
-    db=get_db()
-    db.row_factory = make_dicts
-    students = []
-    for student in query_db("select * from Takes natural join Users where type=0 and cid in (select cid from Takes where username='%s')" % (session['user']['username'])):
-        students.append(student)
-    if (not grade) or (not student) or (not event):
-        # some of grade,student or event type inputs are None, return with error
-        error = "None of grade,username and type can be empty."
-        return render_template('grade.html',user=session['user'],grade=get_grade_table(),error=error,student=students)
-    if not query_db("select * from Takes where username='%s' and cid in (select cid from Takes where username='%s')" % (student,user)):
-        # student does not exist or is not in the instructors' class.
-        error = "The student is not in your class."
-        return render_template('grade.html',user=session['user'],grade=get_grade_table(),error=error,student=students)
-    grades=query_db("select * from Grades where username='%s' and ename='%s'" % (student,event),one=True)
-    if not grades:
-        # grade(student,event) does not exist
-        # insert event to Events(ename) if not exist
-        query_db("insert into Events(ename) select '%s' where not exists(select 1 from Events where ename='%s')" % (event,event))
-        db.commit()
-        # insert value(student,event,grade,0) into Events(username,ename,grade,remark)
-        query_db("insert into Grades(username,ename,grade,remark) values('%s','%s',%s,0)" % (student,event,grade)) 
-    else:
-        # grade(student,event) exist, update existing row.
-        if grades['remark'] == 1:
-            # if the student is requesting a remark for that grade, set the remark status to 'remarked'
-            grades['remark'] = -1
-        query_db("update Grades set remark=%d, grade=%s where ename='%s' and username='%s'" % (grades['remark'],grade,event,student))
-    db.commit()
-    return render_template('grade.html',user=session['user'],student=students,grade=get_grade_table(),error=error)
+    if not 'user' in session:
+        return redirect(url_for('home'))
+    if request.method == 'POST':
+        json_data = request.json['changes']
+        for item in json_data:
+            grading(item['name'],item['type'],item['grad'])
+    return redirect(url_for('grade'))
 
 @app.route("/remark-sort")
 def remark_sort():
+    if not 'user' in session:
+        return redirect(url_for('home'))
     db=get_db()
     db.row_factory = make_dicts
     grades=[]
@@ -188,24 +184,24 @@ def remark_sort():
 @app.route("/setting")
 def setting():
     if not 'user' in session:
-        return render_template('index.html')
+        return redirect(url_for('home'))
     return render_template('grade.html',user=session['user'])
 @app.route("/feedback")
 def feedback():
     if not 'user' in session:
-        return render_template('index.html')
+        return redirect(url_for('home'))
     return render_template('grade.html',user=session['user'])
 
 @app.route('/labs')
 def labs():
     if not 'user' in session:
-        return render_template('index.html')
+        return redirect(url_for('home'))
     return render_template('labs.html',user=session['user'])
 
 @app.route('/lectures')
 def lectures():
     if not 'user' in session:
-        return render_template('index.html')
+        return redirect(url_for('home'))
     return render_template('lectures.html',user=session['user'])
 
 if __name__ == "__main__":
