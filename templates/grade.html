@@ -4,6 +4,7 @@
 <title>CSCB63 Design and Analysis of Data Structures</title>
 <link href="../static/style.css" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -55,24 +56,35 @@
     </div>
 
     <section>
-      <h2>Grades</h2><hr>
       <!--only instructors can enter grades of students-->
       {% if user['type'] %}
       <label for="grading">Enter a grade of your student:</label>
-      <form action="/grading" method="POST">
-        <input list="students" name="student" placeholder="username" id="student">
-        <datalist id="students">
-        </datalist>
-        <input list="events" name="event" placeholder="type" id="event">
-        <datalist id="events">
-                       
-        </datalist>
-        <input type="number" name="grade" placeholder="grade" min="0" max="100">
-        <input type="submit" value="submit">
-      </form>
+      <!-- <form action="/grading" method="POST"> -->
+      <input list="students" name="student" placeholder="username" id="student">
+      <datalist id="students">
+      </datalist>
+      <input list="events" name="event" placeholder="type" id="event">
+      <datalist id="events">
+                      
+      </datalist>
+      <input type="number" name="grade" placeholder="grade" min="0" max="100" id="grade">
+      <button onclick="appendTemp()">Add to Temp</button>
+      <!-- --------------------------------------------------------------------------// -->
+      <h2>Template Grades Changes</h2><hr>
+      <div class="table" id="temp-table">
+        <div class="heading">
+          <div class="cell" id="student-sort">Student</div>
+          <div class="cell" id="type-sort">Type</div>
+          <div class="cell" id="grade-sort">Grade</div>
+        </div>
+      </div>
+      <!-- --------------------------------------------------------------------------// -->
+      <!-- </form> -->
+      <button onclick="archiveTemp()">submit</button>
       {% if error %}
         <p class=error>{{ error }}</p>
       {% endif %}
+      <h2>Student Grades</h2><hr>
       <div class="table" id="grade-table">
         <div class="heading">
             <div class="cell" id="student-sort">Student</div>
@@ -82,7 +94,7 @@
         </div>
         {% for item in grade %}
         <div class="row">
-            <div class="cell">{{ item['username'] }}</div>
+            <div class="cell">{{ item['username']  }}</div>
             <div class="cell">{{ item['ename'] }}</div>
             <div class="cell">{{ item['grade'] }}</div>
             <div class="cell">
@@ -92,7 +104,7 @@
                     <div class="dropdown-content">{{ item['request'] }}</div>
                 </div>
             {% elif item['remark'] == -1 %}
-                remarked
+                Remarked
             {% endif %}
             </div>
         </div>
@@ -118,7 +130,7 @@
                 <form method="post" action="/grade-remark">
                     <input type="text" class="remark-content" value="" placeholder="Put your reason for remark here." name="remark_request">
                     <input type="submit" value ="remark">
-                    <input type="hidden" name="remark_event" value="{{ item['ename'] }}">
+                    <input type="hidden" value=1 name="remark_event" value="{{ item['ename'] }}">
               {% endif %}
               </div>
           </div>
@@ -133,10 +145,82 @@
     <p><a href="http://web.cs.toronto.edu">Faculty of Computer Science at UofT</a></p>
     <p>Site designed by <strong>Jiale Shang</strong> & <strong>Zechen Lai</strong> & <strong>Feilong Qiu</strong></p>
   </div>
-  <script>
-    var users = JSON.parse('{{ user | tojson | safe}}');
-    var grades = JSON.parse('{{ grade | tojson | safe}}');
-    var students = JSON.parse('{{ student | tojson | safe}}');
+  <script >
+    let users = JSON.parse('{{ user | tojson | safe}}');
+    let grades = JSON.parse('{{ grade | tojson | safe}}');
+    let students = JSON.parse('{{ student | tojson | safe}}');
+    //-------------------------------------------------
+    const log = console.log
+    let newGrade = []
+    //let newRemark = []
+    function appendTemp() {
+      const tempTable = document.getElementById("temp-table");
+      const stdName = document.getElementById("student").value;
+      const assType = document.getElementById("event").value;
+      const assGrad = document.getElementById("grade").value;
+
+      if (!isDataValid(stdName, assType, assGrad)){
+        return
+      }
+      if (isDataExists(stdName, assType, newGrade)){
+        log("shit, not this again") // name+event already inside table
+        return
+      }
+
+      const data = {
+        name: stdName,
+        type: assType,
+        grad: assGrad
+      }
+      newGrade.push(data);
+      
+      tempTable.innerHTML+=
+        `<div class="row">
+          <div class="cell">`+stdName+`</div>
+          <div class="cell">`+assType+`</div>
+          <div class="cell">`+assGrad+`</div>
+        </div>`
+      
+      log(newGrade)
+    };
+
+    function archiveTemp() { // or submit Temp
+      // append newGrade to db
+      if (newGrade.length == 0){
+        console.log('You must submit at least one grade')
+      }else{
+        console.log(JSON.stringify(newGrade));
+        $.ajax({
+          type:'POST',
+          url: "/grading",
+          dataType: 'json',
+          contentType: 'application/json; charset=utf-8',
+          data: JSON.stringify({changes: newGrade})
+        });
+      };
+      // find and change newRemark in db
+    };
+    function isDataValid(name, type, grad) {
+      if(name == "" || type == "" || grad == ""){
+        log("something empty")
+        return false
+      }else if (isNaN(grad) || 100 < grad || grad < 0){
+        log("grad not number or not in range: "+ grad)
+        return false
+      }
+      // }else if (grad){ //name not in list
+      //   return false
+      // }
+      return true
+    }
+    function isDataExists(name, type ,list){
+      for (i = 0; i < list.length; i++) {
+        if (list[i]['name'] == name && list[i]['type'] == type) {
+          return true;
+        }
+      }
+    }
+    //------------------------------------------------
     function option_list(){
         let l1= document.getElementById('students');
         let l2 = document.getElementById('events');
@@ -177,7 +261,7 @@
     }else{
         x.innerHTML="<a href='/remark-sort'>Remark</a>"
     }
-
+    
   </script>
 </body>
 </html>
