@@ -117,7 +117,7 @@ def login():
 def logout():
     session.pop('user',None)
     return redirect(url_for('home'))
-    
+
 @app.route('/signup',methods=['GET', 'POST'])
 def signup():
     db = get_db()
@@ -194,6 +194,7 @@ def request_remark():
         remark_req = request.form['remark_request']
         remark_eve = request.form['remark_event']
         user=session['user']['username']
+        # if student request a remark, set remark status as 1
         query_db("update Grades set remark=?, request=? where username=? and ename=?",[1,remark_req,user,remark_eve])
         db.commit()
         db.close()
@@ -204,15 +205,32 @@ def grading():
     if not 'user' in session:
         return redirect(url_for('home'))
     if request.method == 'POST':
+        # if instructor submit temp changes
+        # update evey grade change in list received from java
         db=get_db()
         db.row_factory = make_dicts
         changes = request.json['changes']
-        deletes = request.json['deletes']
         for item in changes:
-            grade_changes(item['name'],item['type'],item['grad'])
+            grade_changes(item['username'],item['ename'],item['grade'])
         db.commit()
         db.close()
-    return redirect(url_for('home'))
+    #No, it won't actually rerender the page, since it is called by java, just for safety thought
+    return redirect(url_for('grade'))
+
+@app.route("/deleting",methods=['GET','POST'])
+def deleting():
+    if not 'user' in session:
+        return redirect(url_for('home'))
+    if request.method == 'POST':
+        db=get_db()
+        db.row_factory = make_dicts
+        username=request.json['username']
+        ename=request.json['ename']
+        query_db('delete from Grades where username=? and ename=?',[username,ename])
+        db.commit()
+        db.close()
+    #No, it won't actually rerender the page, since it is called by java,just for safety thought
+    return redirect(url_for('grade'))
 
 @app.route("/remark-sort")
 def remark_sort():
