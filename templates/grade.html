@@ -60,57 +60,38 @@
       <!-- --------------------------------------------------------------------------// -->
       <h2>Template Changes</h2><hr>
       <label for="grading">Enter a grade of your student:</label>
-      <!-- <form action="/grading" method="POST"> -->
       <input list="students" name="student" placeholder="username" id="student">
       <datalist id="students">
       </datalist>
+      <!--input and datalist options enables instructor to enter a new event not in current table but will be inserted by flask-->
       <input list="events" name="event" placeholder="type" id="event">
       <datalist id="events">                  
       </datalist>
       <input type="number" name="grade" placeholder="grade" min="0" max="100" id="grade">
-      <button onclick="appendTemp()">Add to Temp</button>
-      <button onclick="archiveTemp()" type="float:right">Submit changes</button>
+      <!--java function to create new temp table row with inputs and render the temptable-->
+      <button onclick="appendTemp()">add to Temp</button>
+      <button onclick="archiveTemp()" type="float:right">submit changes</button>
       <p id="error"></p>
       <div class="table" id="temp-table">
       </div>
       <!-- --------------------------------------------------------------------------// -->
-      <!-- </form> -->
     </section>
     <section>
       <h2>Student Grades</h2><hr>
+      <!--this will call flask func retruning data with filters-->
       <form action="/search-grade" method='GET'>
+        <!--Instructor can only search for student with exact username-->
+        <!--Ye, I know it is not easy for searching but I don't know if there are some funcs like 'substring' in sqlite3-->
+        <!--Can be improved later with java-->
         <input type="text" name="search-student" value="" placeholder="username">
+        <!--Intsrtuctor can only search for existing event-->
         <select id="search-event" name="search-event">
-
         </select>
         <input type="number" name="search-grade" value="" min="0" max="100" placeholder="grade">
-        <input type="submit" value="Search">
+        <input type="submit" value="search">
       </form>
+      <p id="message"></p><a href="/grade"><button>refresh</button></a>
       <div class="table" id="grade-table">
-        <div class="heading">
-            <div class="cell" id="student-sort">Student</div>
-            <div class="cell" id="type-sort">Type</div>
-            <div class="cell" id="grade-sort">Grade</div>
-            <div class="cell" id="remark-sort" ><a href="/remark-sort">Remark</a></div>
-        </div>
-        
-        {% for item in grade %}
-        <div class="row">
-            <div class="cell">{{ item['username']  }}</div>
-            <div class="cell">{{ item['ename'] }}</div>
-            <div class="cell">{{ item['grade'] }}</div>
-            <div class="cell">
-            {% if item['remark'] == 1 %}
-                <div class="dropdown">
-                    <span style="color:red">Remark</span>
-                    <div class="dropdown-content">{{ item['request'] }}</div>
-                </div>
-            {% elif item['remark'] == -1 %}
-                Remarked
-            {% endif %}
-            </div>
-        </div>
-        {% endfor %}
       </div>
     </section>
     {% else %}
@@ -150,7 +131,7 @@
     <p><a href="http://web.cs.toronto.edu">Faculty of Computer Science at UofT</a></p>
     <p>Site designed by <strong>Jiale Shang</strong> & <strong>Zechen Lai</strong> & <strong>Feilong Qiu</strong></p>
   </div>
-  <script >
+  <script>
     let users = JSON.parse('{{ user | tojson | safe}}');
     let grades = JSON.parse('{{ grade | tojson | safe}}');
     let students = JSON.parse('{{ student | tojson | safe}}');
@@ -171,19 +152,56 @@
           <div class="cell"></div>
         </div>`;
       for (i=0;i<newGrade.length;i++){
-        addTemprow(newGrade[i].name,newGrade[i].type,newGrade[i].grad,i);
+        addTemprow(newGrade[i].username,newGrade[i].ename,newGrade[i].grade,i);
       };
     };
     function renderTable(){
-      
+      gradeTable.innerHTML=
+       `<div class="heading">
+          <div class="cell" id="student-sort">Student</div>
+          <div class="cell" id="type-sort">Type</div>
+          <div class="cell" id="grade-sort">Grade</div>
+          <div class="cell" id="remark-sort" ><a href="/remark-sort">Remark</a></div>
+          <div class="cell"></div>
+        </div>`;
+      let x=document.getElementById('remark-sort');
+      if (remark_sorted()){
+          x.innerHTML="<a href='/grade'>Remark</a>"
+      }else{
+          x.innerHTML="<a href='/remark-sort'>Remark</a>"
+      };
+      for (i=0;i<grades.length;i++){
+        addGraderow(grades[i].username,grades[i].ename,grades[i].grade,grades[i].remark,grades[i].request);
+      }
     };
-    function addTemprow(stdName,assType,assGrad,i){
+    function addGraderow(name,type,grade,remark,request,i){
+      let buff="";
+      if (remark == 1){
+        buff=`<div class="dropdown">
+                    <span style="color:red">Unremark</span>
+                    <div class="dropdown-content">`+request+`</div>
+              </div>`;
+      }else if (remark == -1){
+        buff=`Remark`
+      };
+      gradeTable.innerHTML+=
+          `<div class="row">
+            <div class="cell">`+name+`</div>
+            <div class="cell">`+type+`</div>
+            <div class="cell">`+grade+`</div>
+            <div class="cell">
+              `+buff+`
+            </div>
+            <div class="cell"><button class="remove-grade" onclick="remove_grade('`+name+`','`+type+`')">remove</button></div>
+          </div>`;
+    };
+    function addTemprow(stdName,assType,assGrad){
       tempTable.innerHTML+=
               `<div class="row">
                 <div class="cell">`+stdName+`</div>
                 <div class="cell">`+assType+`</div>
                 <div class="cell">`+assGrad+`</div>
-                <div class="cell"><a class="remove-temp" onclick="remove_row('`+stdName+`','`+assType+`')">X</a></div>
+                <div class="cell"><button class="remove-temp" onclick="remove_row('`+stdName+`','`+assType+`')">remove</button></div>
               </div>`
     };
     function appendTemp() {
@@ -195,15 +213,18 @@
         return
       }
       if (!isDataExists(stdName, assType, newGrade,assGrad)){
-        const data = {
-        name: stdName,
-        type: assType,
-        grad: assGrad
+        let data = {
+        username: stdName,
+        ename: assType,
+        grade: assGrad
         };
         newGrade.push(data);
       };
+      console.log(newGrade);
       renderTemp();
     };
+
+    // refer: https://stackoverflow.com/questions/8567114/how-to-make-an-ajax-call-without-jquery
     function getXmlDoc(){
       var xmlDoc;
       if(window.XMLHttpRequest){
@@ -213,18 +234,57 @@
       }
       return xmlDoc;
     }
+    function remove_grade(name,type){
+      // post grade that instructor want to delete to flask
+      var xmlDoc = getXmlDoc();
+      xmlDoc.open('POST','/deleting',true);
+      xmlDoc.setRequestHeader("Content-type","application/json");
+      xmlDoc.send(JSON.stringify({username: name,ename:type}));
+      //since the page won't rerender, append change to current grades list and render Grade Table
+      let buff=[]
+      for(i=0;i<grades.length;i++){
+        if (grades[i].username != name || grades[i].ename != type){
+          buff.push(grades[i]);
+        };
+      };
+      grades=buff;
+      renderTable();
+      let mes=document.getElementById('message');
+      mes.innerHTML=`Grades(`+name+`,`+type+`) removed sucessfully.`
+    }
+
     function archiveTemp() { // or submit Temp
       let er=document.getElementById('error');
-      // append newGrade to db
+      // append newGrade to db if any temp changes submit
       if (newGrade.length == 0){
         er.innerHTML="You must submit at least one grade."
       }else{
+        console.log(newGrade);
+        for(i=0;i<newGrade.length;i++){
+          let type=newGrade[i].ename;
+          let grad=newGrade[i].grade;
+          let name=newGrade[i].username;
+          if(! isDataExists(name,type,grades,grad)){
+            let data={
+              ename: type,
+              grade: grad,
+              remark: 0,
+              request: "",
+              username: name
+            };
+            grades.push(data);
+          };
+        };
         var xmlDoc = getXmlDoc();
         xmlDoc.open('POST','/grading',true);
         xmlDoc.setRequestHeader("Content-type","application/json");
-        xmlDoc.send(JSON.stringify({changes: newGrade,deletes: deleteGrade}));
+        xmlDoc.send(JSON.stringify({changes: newGrade}));
         er.innerHTML="Grade changes sussessfully."
+        newGrade=[];
+        renderTemp();
+        renderTable();
       };
+      
     };
     function isDataValid(name, type, grad) {
       let er=document.getElementById('error');
@@ -245,16 +305,22 @@
     }
     function isDataExists(name, type ,list,grad){
       for (i = 0; i < list.length; i++) {
-        if (list[i]['name'] == name && list[i]['type'] == type) {
-          list[i]['grad'] =  grad
+        if (list[i]['username'] == name && list[i]['ename'] == type) {
+          list[i]['grade'] =  grad
+          if(list==grades){
+            if(grades[i].remark==0){
+              grades[i].remark==-1
+            }
+          }
           return true
         }
       }
+      return false
     }
     function remove_row(name,type){
       let buff=[];
       for (i=0;i<newGrade.length;i++){
-        if(newGrade[i].type != type || newGrade[i].name !=name){
+        if(newGrade[i].ename != type || newGrade[i].username !=name){
           buff.push(newGrade[i]);
         };
       };
@@ -287,7 +353,6 @@
                 let op = document.createElement('option');
                 op.setAttribute('value',a);
                 l1.appendChild(op);
-                
             };
         };
     };
@@ -303,12 +368,7 @@
     if(users.type){
       option_list();
       renderTemp();
-      let x=document.getElementById('remark-sort');
-      if (remark_sorted()){
-          x.innerHTML="<a href='/grade'>Remark</a>"
-      }else{
-          x.innerHTML="<a href='/remark-sort'>Remark</a>"
-      };
+      renderTable();
     };
   </script>
 </body>
