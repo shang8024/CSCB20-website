@@ -122,31 +122,57 @@ def logout():
 def signup():
     db = get_db()
     db.row_factory = make_dicts
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'first_name' in request.form and 'last_name' in request.form and 'email' in request.form and 'class' in request.form:
+    error = None
+    if('return' in request.form):
+        return render_template('index.html')
+    #first time login!!!!
+    if(error == None and request.method != 'POST'):
+        return render_template('signup.html')
+
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'first_name' in request.form and 'last_name' in request.form and 'type' in request.form and 'email' in request.form and ('Lec01' in request.form or 'Lec02' in request.form or 'Lec03' in request.form):
+
         curr_username = request.form['username']
         curr_f_name = request.form['first_name']
         curr_l_name = request.form['last_name']
-        curr_email = request.form['email'] #currently set to email address
-        curr_class = request.form['class']
+        curr_email = request.form['email']
+        curr_type = request.form['type']
         curr_ps = request.form['password']
+        #three classes
+        curr_class1 = request.form.getlist('Lec01')
+        curr_class2 = request.form.getlist('Lec02')
+        curr_class3 = request.form.getlist('Lec03')
+
+
 
         sql_username = query_db('select username from Users where username=?', [curr_username], one=True)
         #sql_uid = query_db('select username from Users where utorid=?', [curr_utorid], one=True)
         if(sql_username == None): #and #sql_uid == None):
             #insert our new User info:
-            print(sql_username)
+
             #print(sql_uid)
-            data = [curr_username, curr_f_name, curr_l_name, curr_ps, curr_email, curr_class]
+            data = [curr_username, curr_f_name, curr_l_name, curr_ps, curr_email, curr_type]
+
             db.execute('INSERT INTO Users (username,first_name,last_name,password,email,type) VALUES (?,?,?,?,?,?)', (*data,))#(curr_username,curr_f_name,curr_l_name,curr_ps,curr_class))
+            if(curr_class1):#if class 1 value is not empty:
+                take_data_1 = [curr_username,curr_class1[0]]
+                db.execute('INSERT INTO Takes (username,cid) VALUES (?,?)', (*take_data_1,))
+            if(curr_class2):#if class 2 value is not empty:
+                take_data_2 = [curr_username,curr_class2[0]]
+                db.execute('INSERT INTO Takes (username,cid) VALUES (?,?)', (*take_data_2,))
+            if(curr_class3):#if class 3 value is not empty:
+                take_data_3 = [curr_username,curr_class3[0]]
+                db.execute('INSERT INTO Takes (username,cid) VALUES (?,?)', (*take_data_3,))
             db.commit()
             db.close()
-            return redirect(url_for('home'))
+            error = "Register successful!"
+            return render_template('signup.html', error = error)
         else:
-            print('Username exists!!!!! Try again!')
-            return render_template('signup.html')
+            error = 'Username exists!!!!! Try again!'
+            return render_template('signup.html', error = error)
     else:
-        print('Enter the info to register!!!!')
-        return render_template('signup.html')
+        error = 'Please Fill-in EVERY field to register'
+        return render_template('signup.html',error = error)
+
 
 @app.route("/grade",methods=['GET','POST'])
 def grade():
