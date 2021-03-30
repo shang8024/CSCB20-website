@@ -4,22 +4,43 @@
     <meta charset="utf-8">
     <title>Login CSCB63</title>
   </head>
-  <link rel="stylesheet" href="../static/signup.css">
+  <link rel="stylesheet" href="../static/style.css">
   <body>
     <div class="sign_box">
+      <h1>CSCB63 Account Registration </h1>
+      <p>Design and Analysis of Data Structures</p>
     <form action="/signup" method = "post">
-        <input id = "email_box"  type="text" name="email" placeholder = "Email">
-        <input id = "username_box"  type="text" name="username" placeholder = "Username">
-        <input id = "first_name_box"  type="text" name="first_name" placeholder = "First Name">
-        <input id = "last_name_box"  type="text" name="last_name" placeholder = "Last Name">
-        <input id = "password_box"  type="password" name="password" placeholder = "Password">
-        <select name="class" id="class_box">
-          <option value="1">Class 1</option>
-          <option value="2">Class 2</option>
-          <option value="3">Class 3</option>
-          <option value="4">Class 4</option>
+      <label for="type_box" style="font-size:25px" accesskey="p">Register As:</label>
+      <select name="type" style="font-size:20px" id="type_box">
+        <option value="1">Instructor
+        <option value="0">Student
         </select>
-        <input type="submit" name="submit-button" value="submit">
+        <br>
+        <div class="input_box">
+          <input id = "email_box"  type="text" style="font-size:18px" name="email" placeholder = "Email"> <br>
+          <input id = "username_box"  type="text"style="font-size:18px" name="username" placeholder = "Username"><br>
+          <input id = "first_name_box"  type="text" style="font-size:18px" name="first_name" placeholder = "First Name"><br>
+          <input id = "last_name_box"  type="text" style="font-size:18px" name="last_name" placeholder = "Last Name"><br>
+          <input id = "password_box"  type="password" style="font-size:18px" name="password" placeholder = "Password">
+        </div>
+
+
+
+
+        <br>
+        <input type="checkbox" id="Lec01" name="Lec01" value="1">
+        <label for="Lec01"> Lec 01</label><br>
+        <input type="checkbox" id="Lec02" name="Lec02" value="2">
+        <label for="Lec 02">Lec 02</label><br>
+        <input type="checkbox" id="Lec03" name="Lec03" value="3">
+        <label for="Lec 03">Lec 03</label><br>
+        <input type="submit" style="font-size:18px" name="submit-button" value="Register">
+        <input type="submit" style="font-size:18px" name="return" value="Return To Login">
+
+
+        {% if error %}
+          <p class=error><strong></strong> {{ error }}
+        {% endif %}
       </div>
 
 
