@@ -331,4 +331,9 @@ nav ul ul a:hover {
 .input_box{
 	display: inline-block;
 	line-height: 42px;
+/*-----------------Additional setting for large-size textarea----*/
+.large{
+	width: 95%;
+	height: 80px;
+	resize: none
 }
