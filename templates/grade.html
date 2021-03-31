@@ -137,7 +137,6 @@
     let students = JSON.parse('{{ student | tojson | safe}}');
     let events = JSON.parse('{{ event | tojson | safe}}');
     //-------------------------------------------------
-    const log = console.log
     let newGrade = []
     let deleteGrade = []
     const tempTable = document.getElementById("temp-table");
@@ -220,10 +219,9 @@
         };
         newGrade.push(data);
       };
-      console.log(newGrade);
       renderTemp();
     };
-
+    // java post json to flask -- ajax without jquery
     // refer: https://stackoverflow.com/questions/8567114/how-to-make-an-ajax-call-without-jquery
     function getXmlDoc(){
       var xmlDoc;
@@ -259,7 +257,6 @@
       if (newGrade.length == 0){
         er.innerHTML="You must submit at least one grade."
       }else{
-        console.log(newGrade);
         for(i=0;i<newGrade.length;i++){
           let type=newGrade[i].ename;
           let grad=newGrade[i].grade;
