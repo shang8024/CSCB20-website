@@ -55,23 +55,13 @@
     </div>
     <!-- inspried by https://www.utsc.utoronto.ca/~bretscher/b20/labs.html-->
     <section>
-      <h2>Anonymous Feedback</h2><hr>
-      <form method="post">
-      <p>Instructor to send the feedback: <select name="iuser">
-        {% for item in instructor %}
-        <option value="{{ item['username'] }}">{{ item['first_name'] }} {{ item['last_name'] }}</option>
-        {% endfor %}
-      </select></p>
-      <p>What do you like about the instructor teaching?</p>
-      <p><textarea type="text" class="large" name="q1"></textarea></p>
-      <p>What do you recommend the instructor to do to improve their teaching?</p>
-      <p><textarea type="text" class="large" name="q2"></textarea></p>
-      <p>What do you like about the labs?</p>
-      <p><textarea type="text" class="large" name="q3"></textarea></p>
-      <p>What do you recommend the lab instructors to do to improve their lab teaching?</p>
-      <p><textarea type="text" class="large" name="q4"></textarea></p>
-      <p><input type="submit" value=Submit> <strong>{{ submit }}</strong></p>
-      </form>
+      <h2>Account Settings</h2><hr>
+        <p>Account Type: <input type="text" disabled value="{% if user['type'] %}Instructor{% else %}Student{% endif %}"></p>
+        <p>Username: <input type="text" disabled value="{{ user['username'] }}"></p>
+        <p><form method="post">Password: <input type="password" value = "NotAvailable" name = "password1"> <input type = "password" required placeholder="Comfirm Password" name = "password2"> <input type = "submit" value = "Reset"> {{error[0]}}</form></p>
+        <p><form method="post">First Name: <input type="text" required value="{{ user['name'][0] }}" name = "first_name"> <input type = "submit" value = "Reset"> {{error[1]}}</form></p>
+        <p><form method="post">Last Name: <input type="text" required value="{{ user['name'][1] }}" name = "last_name"> <input type = "submit" value = "Reset"> {{error[2]}}</form></p>
+        <p><form method="post">Email: <input type="text" value="{{ user['email'] }}" name = email> <input type = "submit" value = "Reset"> {{error[3]}}</form></p>
     </section>
   </div>
   <!--content end-->

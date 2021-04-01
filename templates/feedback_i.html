@@ -11,7 +11,7 @@
   <!-- inspired by https://codepen.io/andornagy/pen/RNeydj-->
   <nav> 
     <!--menu title, change position and font size when it becomes a dropdown menu-->
-    <div id="menu-title">Welcome, {% if type%}<strong>Instructor</strong>{% else %}<strong>Student</strong>{% endif %} {{ name }}</div>
+    <div id="menu-title">Welcome, <strong>{% if user['type'] %}Instructor{% else %}Student{% endif %}</strong> {{ user['name'][0] }}</div>
     <!-- dropdown menu for mobile devices-->
     <label for="drop" class="button">≡</label>
     <input type="checkbox" id="drop"/>
@@ -30,7 +30,7 @@
           <li><a href="../static/Sample.pdf">Syllabus</a></li>
         </ul> 
       </li>
-      <li><a href="#top">Labs</a></li>
+      <li><a href="{{ url_for('labs') }}">Labs</a></li>
       <li><a href="https://markus.utsc.utoronto.ca/cscb63w21">Markus</a></li>
       <li><a href="{{ url_for('home', _anchor='course-team') }}">Course Team</a></li>
       <li><label for="drop-2" class="button">Account</label>
@@ -38,6 +38,9 @@
         <!-- dropdown items for "Course Materials"-->
         <input type="checkbox" id="drop-2"/>
         <ul>
+          <li><a href="{{ url_for('grade')}}">Grade</a></li>
+          <li><a href="{{ url_for('feedback') }}">Feedback</a></li>
+          <li><a href="{{ url_for('setting') }}">Setting</a></li>
           <li><a href="/logout">logout</a></li>
         </ul> 
       </li>
@@ -60,8 +63,8 @@
         </div>
         {% for item in feedback %}
         <div class="row">
-          <div class="cell">{{item['question']}}</div>
-          <div class="cell">{{item['response']}}</div>
+          <div class="cell">{{item['qname']}}</div>
+          <div class="cell">{{item['ans']}}</div>
         </div>
         {% endfor %}
       </div>
