@@ -312,6 +312,45 @@ def feedback():
         #return instructors.__str__()
         return render_template('feedback_s.html',type=session['type'],name=session['name'],instructor = instructors,submit = submit)
 
+@app.route('/account_setting',methods=['GET', 'POST'])
+def account_setting():
+    if not 'user' in session:
+        return redirect(url_for('home'))
+    error = ['','','','']
+    db = get_db()
+    db.row_factory = make_dicts
+    data = query_db('SELECT* FROM Users WHERE username == ?',(*[session['username']],))[0]
+    First_name = data['first_name']
+    Last_name = data['last_name']
+    Email = data['email']
+    if request.method == 'POST':
+        #return request.form.__str__()
+        if 'password2' in request.form:
+            error[0] = 'The two password are inconsistent!'
+            if request.form['password1'] == request.form['password2']:
+                db.execute('UPDATE Users SET password = ? WHERE username = ?',(*[request.form['password2'], session['username']],))
+                error[0] = 'Reset Successfully!'
+        if 'first_name' in request.form:
+            First_name = request.form['first_name']
+            db.execute('UPDATE Users SET first_name = ? WHERE username = ?',(*[request.form['first_name'], session['username']],))
+            error[1] = 'Reset Successfully!'
+        if 'last_name' in request.form:
+            Last_name = request.form['last_name']
+            db.execute('UPDATE Users SET last_name = ? WHERE username = ?',(*[request.form['last_name'], session['username']],))
+            error[2] = 'Reset Successfully!'
+        if 'email' in request.form:
+            if request.form['email'] == 'None' or request.form['email'] == '':
+                Email = 'None'
+                db.execute('UPDATE Users SET email = NULL WHERE username = ?',(*[session['username']],))
+                error[3] = 'Email Deleted Successfully!'
+            else:
+                Email = request.form['email']
+                db.execute('UPDATE Users SET email = ? WHERE username = ?',(*[request.form['email'], session['username']],))
+                error[3] = 'Reset Successfully!'
+    db.commit()
+    db.close
+    return render_template('account_setting.html',type=session['type'],username=session['username'],First_name = First_name,Last_name = Last_name,Email = Email,error = error)
+
 @app.route("/setting")
 def setting():
     if not 'user' in session:
