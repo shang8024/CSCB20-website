@@ -104,7 +104,8 @@ def login():
             session['user'] = {
                 'username': user['username'],
                 'name': [user['first_name'],user['last_name']],
-                'type': user['type']
+                'type': user['type'],
+                'email': user['email']
             }
             return redirect(url_for('home'))
         else:
@@ -270,20 +271,14 @@ def feedback():
         return redirect(url_for('home'))
     db = get_db()
     db.row_factory = make_dicts
-    if session['type']:
+    name=session['user']['username']
+    if session['user']['type']:
         feedbacks=[]
-        for item in query_db('SELECT* FROM Feedback'):
-            if item['qid'] == 1 and session['name'] == item['username']:
-                feedbacks.append({'question':'What do you like about the instructor teaching?','response':item['ans']})
-            if item['qid'] == 2 and session['name'] == item['username']:
-                feedbacks.append({'question':'What do you recommend the instructor to do to improve their teaching?','response':item['ans']})
-            if item['qid'] == 3 and session['name'] == item['username']:
-                feedbacks.append({'question':'What do you like about the labs?','response':item['ans']})
-            if item['qid'] == 4 and session['name'] == item['username']:
-                feedbacks.append({'question':'What do you recommend the lab instructors to do to improve their lab teaching?','response':item['ans']})
+        for item in query_db('select qname,ans from Feedback natural join Questions where username=?',[name]):
+            feedbacks.append(item)
         db.close
         #return feedbacks.__str__()
-        return render_template('feedback_i.html',type=session['type'],name=session['name'],feedback = feedbacks)
+        return render_template('feedback_i.html',user=session['user'],feedback = feedbacks)
     else:
         instructors=[]
         submit = ''
@@ -310,57 +305,43 @@ def feedback():
         db.commit()
         db.close
         #return instructors.__str__()
-        return render_template('feedback_s.html',type=session['type'],name=session['name'],instructor = instructors,submit = submit)
+        return render_template('feedback_s.html',user=session['user'],instructor = instructors,submit = submit)
 
-@app.route('/account_setting',methods=['GET', 'POST'])
-def account_setting():
+@app.route('/setting',methods=['GET', 'POST'])
+def setting():
     if not 'user' in session:
         return redirect(url_for('home'))
     error = ['','','','']
     db = get_db()
     db.row_factory = make_dicts
-    data = query_db('SELECT* FROM Users WHERE username == ?',(*[session['username']],))[0]
-    First_name = data['first_name']
-    Last_name = data['last_name']
-    Email = data['email']
+    username=session['user']['username']
     if request.method == 'POST':
         #return request.form.__str__()
         if 'password2' in request.form:
             error[0] = 'The two password are inconsistent!'
             if request.form['password1'] == request.form['password2']:
-                db.execute('UPDATE Users SET password = ? WHERE username = ?',(*[request.form['password2'], session['username']],))
+                db.execute('UPDATE Users SET password = ? WHERE username = ?',(*[request.form['password2'], username],))
                 error[0] = 'Reset Successfully!'
         if 'first_name' in request.form:
-            First_name = request.form['first_name']
-            db.execute('UPDATE Users SET first_name = ? WHERE username = ?',(*[request.form['first_name'], session['username']],))
+            session['user']['name'][0] = request.form['first_name']
+            db.execute('UPDATE Users SET first_name = ? WHERE username = ?',(*[request.form['first_name'], username],))
             error[1] = 'Reset Successfully!'
         if 'last_name' in request.form:
-            Last_name = request.form['last_name']
-            db.execute('UPDATE Users SET last_name = ? WHERE username = ?',(*[request.form['last_name'], session['username']],))
+            session['user']['name'][1] = request.form['last_name']
+            db.execute('UPDATE Users SET last_name = ? WHERE username = ?',(*[request.form['last_name'], username],))
             error[2] = 'Reset Successfully!'
         if 'email' in request.form:
             if request.form['email'] == 'None' or request.form['email'] == '':
-                Email = 'None'
-                db.execute('UPDATE Users SET email = NULL WHERE username = ?',(*[session['username']],))
+                session['user']['email'] = 'None'
+                db.execute('UPDATE Users SET email = NULL WHERE username = ?',(*[username],))
                 error[3] = 'Email Deleted Successfully!'
             else:
-                Email = request.form['email']
-                db.execute('UPDATE Users SET email = ? WHERE username = ?',(*[request.form['email'], session['username']],))
+                session['user']['email'] = request.form['email']
+                db.execute('UPDATE Users SET email = ? WHERE username = ?',(*[request.form['email'], username],))
                 error[3] = 'Reset Successfully!'
     db.commit()
     db.close
-    return render_template('account_setting.html',type=session['type'],username=session['username'],First_name = First_name,Last_name = Last_name,Email = Email,error = error)
-
-@app.route("/setting")
-def setting():
-    if not 'user' in session:
-        return redirect(url_for('home'))
-    return render_template('grade.html',user=session['user'])
-@app.route("/feedback")
-def feedback():
-    if not 'user' in session:
-        return redirect(url_for('home'))
-    return render_template('grade.html',user=session['user'])
+    return render_template('setting.html',user=session['user'],error = error)
 
 @app.route('/labs')
 def labs():
