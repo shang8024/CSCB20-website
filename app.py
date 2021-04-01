@@ -281,7 +281,7 @@ def feedback():
                 feedbacks.append({'question':'What do you like about the labs?','response':item['ans']})
             if item['qid'] == 4 and session['name'] == item['username']:
                 feedbacks.append({'question':'What do you recommend the lab instructors to do to improve their lab teaching?','response':item['ans']})
-        db.close()
+        db.close
         #return feedbacks.__str__()
         return render_template('feedback_i.html',type=session['type'],name=session['name'],feedback = feedbacks)
     else:
@@ -308,7 +308,7 @@ def feedback():
                 db.execute('INSERT INTO Feedback (username,qid,ans) VALUES (?,4,?)',(*insert_data,))
                 submit = 'Submitted Successfully!'
         db.commit()
-        db.close()
+        db.close
         #return instructors.__str__()
         return render_template('feedback_s.html',type=session['type'],name=session['name'],instructor = instructors,submit = submit)
 
