@@ -4,6 +4,7 @@
 <title>CSCB63 Design and Analysis of Data Structures</title>
 <link href="../static/style.css" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -11,13 +12,13 @@
   <!-- inspired by https://codepen.io/andornagy/pen/RNeydj-->
   <nav> 
     <!--menu title, change position and font size when it becomes a dropdown menu-->
-    <div id="menu-title">Welcome, <strong>Instructor</strong> {{ user['name'][0] }}</div>
+    <div id="menu-title">Welcome, <strong>Student</strong> {{ user['name'][0] }}</div>
     <!-- dropdown menu for mobile devices-->
     <label for="drop" class="button">≡</label>
     <input type="checkbox" id="drop"/>
     <ul class="menu">
       <li><a href="{{ url_for('home') }}">Home</a></li>
-      <li><a href="https://piazza.com/utoronto.ca/winter2021/cscb63h3slec01/home">Piazza</a></li>
+      <li><a href="http://piazza.com/utoronto.ca/winter2021/cscb63h3slec01/home">Piazza</a></li>
       <li>
         <label for="drop-1" class="button">Course Materials</label>
         <a>Course Materials</a>
@@ -31,17 +32,17 @@
         </ul> 
       </li>
       <li><a href="{{ url_for('labs') }}">Labs</a></li>
-      <li><a href="https://markus.utsc.utoronto.ca/cscb63w21">Markus</a></li>
+      <li><a href="http://markus.utsc.utoronto.ca/cscb63w21">Markus</a></li>
       <li><a href="{{ url_for('home', _anchor='course-team') }}">Course Team</a></li>
       <li><label for="drop-2" class="button">Account</label>
         <a>Account</a>
         <!-- dropdown items for "Course Materials"-->
         <input type="checkbox" id="drop-2"/>
         <ul>
-          <li><a href="{{ url_for('grade')}}">Grade</a></li>
+          <li><a href="{{ url_for('grade') }}">Grade</a></li>
           <li><a href="{{ url_for('feedback') }}">Feedback</a></li>
           <li><a href="{{ url_for('setting') }}">Setting</a></li>
-          <li><a href="/logout">logout</a></li>
+          <li><a href="/logout">Log out</a></li>
         </ul> 
       </li>
     </ul>
@@ -53,27 +54,39 @@
       <h1>CSCB63</h1>
       <p>Design and Analysis of Data Structures</p>
     </div>
-    <!-- inspried by https://www.utsc.utoronto.ca/~bretscher/b20/labs.html-->
     <section>
-      <h2>Anonymous Feedback</h2><hr>
+      <h2>Grade</h2><hr>
       <div class="table">
         <div class="heading">
-          <div class="cell">Question</div>
-          <div class="cell">Response</div>
+          <div class="cell">Type</div>
+          <div class="cell">Grade</div>
+          <div class="cell">Remark</div>
         </div>
-        {% for item in feedback %}
-        <div class="row">
-          <div class="cell">{{item['qname']}}</div>
-          <div class="cell">{{item['ans']}}</div>
-        </div>
-        {% endfor %}
+          {% for item in grade %}
+          <div class="row">
+              <div class="cell">{{ item['ename'] }}</div>
+              <div class="cell">{{ item['grade'] }}</div>
+              <div class="cell">
+              {% if item['remark'] == 1 %}
+                proceeding
+              {% elif item['remark'] == -1 %}
+                remarked
+              {% else %}
+                <form method="post" action="/grade-remark">
+                    <input type="text" class="remark-content" value="" placeholder="Put your reason for remark here." name="remark_request">
+                    <input type="submit" value ="remark">
+                    <input type="hidden" name="remark_event" value="{{ item['ename'] }}">
+              {% endif %}
+              </div>
+          </div>
+          {% endfor %}
       </div>
     </section>
   </div>
   <!--content end-->
   <!--a footer with designers' name and link to Faculty CS UofT-->
   <div id="footer">
-    <p><a href="https://web.cs.toronto.edu/">Faculty of Computer Science at UofT</a></p>
+    <p><a href="http://web.cs.toronto.edu">Faculty of Computer Science at UofT</a></p>
     <p>Site designed by <strong>Jiale Shang</strong> & <strong>Zechen Lai</strong> & <strong>Feilong Qiu</strong></p>
   </div>
 </body>
