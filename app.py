@@ -66,7 +66,7 @@ def grade_changes(student,event,grade):
         query_db("insert into Events(ename) select ? where not exists(select 1 from Events where ename=?)", [event,event])
         db.commit()
         # insert value(student,event,grade,0) into Events(username,ename,grade,remark)
-        query_db("insert into Grades(username,ename,grade,remark) values(?,?,?,0)", student,event,grade) 
+        query_db("insert into Grades(username,ename,grade,remark) values(?,?,?,0)", [student,event,grade]) 
     else:
         # grade(student,event) exist, update existing row.
         if grades['remark'] == 1:
