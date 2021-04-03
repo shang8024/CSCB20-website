@@ -194,7 +194,7 @@ def search_grade():
         if grade:
             query += " and grade=%s" % (grade)
         if student:
-            query += " and username like %%s%" % (student)
+            query += " and username='%s'" % (student)
         grades=[]
         for i in query_db(query):
             grades.append(i)
