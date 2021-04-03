@@ -41,7 +41,7 @@
         <ul>
           <li><a href="#top">Grade</a></li>
           <li><a href="{{ url_for('feedback') }}">Feedback</a></li>
-          <li><a href="{{ url_for('feedback') }}">Setting</a></li>
+          <li><a href="{{ url_for('setting') }}">Setting</a></li>
           <li><a href="/logout">Log out</a></li>
         </ul> 
       </li>
@@ -55,6 +55,24 @@
       <p>Design and Analysis of Data Structures</p>
     </div>
     {% if user['type'] %}
+    <section>
+      <h2>Student Grades</h2><hr>
+      <!--this will call flask func retruning data with filters-->
+      <form action="/search-grade" method='GET'>
+        <!--Instructor can only search for student with exact username-->
+        <!--Ye, I know it is not easy for searching but I don't know if there are some funcs like 'substring' in sqlite3-->
+        <!--Can be improved later with java-->
+        <input type="text" name="search-student" value="" placeholder="username">
+        <!--Intsrtuctor can only search for existing event-->
+        <select id="search-event" name="search-event">
+        </select>
+        <input type="number" name="search-grade" value="" min="0" max="100" placeholder="grade">
+        <input type="submit" onclick="search()" value="search">
+      </form>
+      <p id="message"></p><a href="/grade"><button>refresh</button></a>
+      <div class="table" id="grade-table">
+      </div>
+    </section>
     <section>
       <!--only instructors can enter grades of students-->
       <!-- --------------------------------------------------------------------------// -->
@@ -75,24 +93,6 @@
       <div class="table" id="temp-table">
       </div>
       <!-- --------------------------------------------------------------------------// -->
-    </section>
-    <section>
-      <h2>Student Grades</h2><hr>
-      <!--this will call flask func retruning data with filters-->
-      <form action="/search-grade" method='GET'>
-        <!--Instructor can only search for student with exact username-->
-        <!--Ye, I know it is not easy for searching but I don't know if there are some funcs like 'substring' in sqlite3-->
-        <!--Can be improved later with java-->
-        <input type="text" name="search-student" value="" placeholder="username">
-        <!--Intsrtuctor can only search for existing event-->
-        <select id="search-event" name="search-event">
-        </select>
-        <input type="number" name="search-grade" value="" min="0" max="100" placeholder="grade">
-        <input type="submit" value="search">
-      </form>
-      <p id="message"></p><a href="/grade"><button>refresh</button></a>
-      <div class="table" id="grade-table">
-      </div>
     </section>
     {% else %}
     <section>
@@ -151,7 +151,7 @@
           <div class="cell"></div>
         </div>`;
       for (i=0;i<newGrade.length;i++){
-        addTemprow(newGrade[i].username,newGrade[i].ename,newGrade[i].grade,i);
+        addTemprow(newGrade[i].username,newGrade[i].ename,newGrade[i].grade);
       };
     };
     function renderTable(){
@@ -170,7 +170,7 @@
           x.innerHTML="<a href='/remark-sort'>Remark</a>"
       };
       for (i=0;i<grades.length;i++){
-        addGraderow(grades[i].username,grades[i].ename,grades[i].grade,grades[i].remark,grades[i].request);
+        addGraderow(grades[i].username,grades[i].ename,grades[i].grade,grades[i].remark,grades[i].request,i);
       }
     };
     function addGraderow(name,type,grade,remark,request,i){
@@ -181,13 +181,13 @@
                     <div class="dropdown-content">`+request+`</div>
               </div>`;
       }else if (remark == -1){
-        buff=`Remark`
+        buff=`Remarked`
       };
       gradeTable.innerHTML+=
           `<div class="row">
             <div class="cell">`+name+`</div>
             <div class="cell">`+type+`</div>
-            <div class="cell">`+grade+`</div>
+            <div class="cell"><span id="span-`+i+`" onkeypress = "return testChar(event,'`+i+`');" contenteditable="true" onblur="change_grade('`+name+`','`+type+`','`+i+`')">`+grade+`</span></div>
             <div class="cell">
               `+buff+`
             </div>
@@ -250,6 +250,9 @@
       let mes=document.getElementById('message');
       mes.innerHTML=`Grades(`+name+`,`+type+`) removed sucessfully.`
     }
+    function search(){
+      
+    };
 
     function archiveTemp() { // or submit Temp
       let er=document.getElementById('error');
@@ -303,10 +306,12 @@
     function isDataExists(name, type ,list,grad){
       for (i = 0; i < list.length; i++) {
         if (list[i]['username'] == name && list[i]['ename'] == type) {
-          list[i]['grade'] =  grad
-          if(list==grades){
-            if(grades[i].remark==0){
-              grades[i].remark==-1
+          if (grad!=-1){
+            list[i]['grade'] =  grad
+            if(list==grades){
+              if(grades[i].remark==0){
+                grades[i].remark=-1
+              }
             }
           }
           return true
@@ -324,7 +329,39 @@
       newGrade=buff;
       renderTemp();
     }
-
+    function change_grade(name,type,i){
+      let mes=document.getElementById('message');
+      let changeGrade=[];
+      let ch = document.getElementById(`span-${i}`);
+      let grad = ch.innerHTML; 
+      if (grad.length >= 2 && grad !="100"){
+        mes.innerHTML=`The grade you enter not in the range 0~100`;
+        ch.innerHTML="100";
+        grad="100";
+      };
+      isDataExists(name,type,grades,grad);
+      let data={
+        username:name,
+        ename:type,
+        grade:grad,
+      };
+      changeGrade.push(data);
+      var xmlDoc = getXmlDoc();
+      xmlDoc.open('POST','/grading',true);
+      xmlDoc.setRequestHeader("Content-type","application/json");
+      xmlDoc.send(JSON.stringify({changes: changeGrade}));
+      renderTemp();
+      renderTable();
+    };
+    function testChar(event,i){
+      let ch = document.getElementById(`span-${i}`);
+      let grad = ch.innerHTML; 
+      if ((event.keyCode >= 48 && event.keyCode <= 57)) {
+        return true;
+      }else {
+        return false;
+      }
+    };
     //------------------------------------------------
     function option_list(){
         let l1= document.getElementById('students');
