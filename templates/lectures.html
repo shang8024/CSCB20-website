@@ -11,7 +11,7 @@
   <!-- inspired by https://codepen.io/andornagy/pen/RNeydj-->
   <nav> 
     <!--menu title, change position and font size when it becomes a dropdown menu-->
-    <div id="menu-title">Welcome, <strong>{% if user['type'] %}Instructor{% else %}Student{% endif %}</strong> {{ user['name'][0] }}</div>
+    <div id="menu-title">Welcome, <strong>{% if user['type'] %}Instructor{% else %}Student{% endif %}</strong> {{ user['name']['first_name'] }}</div>
     <!-- dropdown menu for mobile devices-->
     <label for="drop" class="button">≡</label>
     <input type="checkbox" id="drop"/>
