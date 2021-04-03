@@ -173,13 +173,14 @@
               </div>`
     };
     function appendTemp() {
-      const stdName = document.getElementById("student").value;
-      const assType = document.getElementById("event").value;
-      const assGrad = document.getElementById("grade").value;
+      let stdName = document.getElementById("student").value;
+      let assType = document.getElementById("event").value;
+      let assGrad = document.getElementById("grade").value;
 
       if (!isDataValid(stdName, assType, assGrad)){
         return
       }
+      assGrad = parseInt(assGrad);
       if (!isDataExists(stdName, assType, newGrade,assGrad)){
         let data = {
         username: stdName,
@@ -301,13 +302,12 @@
       let mes=document.getElementById('message');
       let changeGrade=[];
       let ch = document.getElementById(`span-${i}`);
-      let grad = ch.innerHTML; 
-      console.log(grad.length);
-      if(grad.length==0){
+      let grad = parseInt(ch.innerHTML); 
+      if(!grad){
         mes.innerHTML=`Grades must not be empty.`;
         ch.innerHTML=grades[i]['grade'];
-      }else if((grad.length >= 3 && grad !="100")||(grad[0]=="0" && grad!="0")){
-        mes.innerHTML=`The grade you enter is not in range 0~100 or start with 0`;
+      }else if(grad>100 || grad<0){
+        mes.innerHTML=`The grade you enter is not in range 0~100`;
         ch.innerHTML=grades[i]['grade'];
       }else{
         isDataExists(name,type,grades,grad);
