@@ -180,7 +180,7 @@ def grade():
         return render_template('grade_i.html',event=events,user=session['user'],grade=grades,student=students)
     else:
         grades = get_grade_table()
-        return render_template('grade_s.html',user=session['user'])
+        return render_template('grade_s.html',user=session['user'],grade=grades)
 
 @app.route("/search-grade",methods=['GET','POST'])
 def search_grade():
