@@ -190,8 +190,8 @@ def search_grade():
         grade=request.args.get('search-grade')
         username=session['user']['username']
         grades=[]
-        for i in query_db("select distinct username, grade, remark, ename,request from Grades natural join Takes natural join Events where ename=? and cid in (select cid from Takes where username=?)",[event,username]):
-            if (not (grade and int(grade) != i['grade'])) and (not (student and student != i['username'])):
+        for i in query_db("select distinct username, grade, remark, ename,request from Grades natural join Takes natural join Events where cid in (select cid from Takes where username=?)",[username]):
+            if (not (grade and int(grade) != i['grade'])) and ((not student) or (student in i['username'])) and (not (event and event != i['ename'])):
                 grades.append(i)
         db.close()
         return render_template('grade_i.html',event=events,user=session['user'],grade=grades,student=students)
