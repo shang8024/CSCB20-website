@@ -26,14 +26,15 @@ def get_grade_table():
     db=get_db()
     db.row_factory = make_dicts
     grades=[]
+    username=session['user']['username']
     if session['user']['type']:
-        # query of getting all the students' grades of the instroctor's classes
-        query = "select distinct username, grade, remark, ename,request from Grades natural join Takes where cid in (select cid from Takes where username='%s')" % (session['user']['username'])
+        # getting all the students' grades of the instroctor's classes
+        for grade in query_db("select distinct username, grade, remark, ename,request from Grades natural join Takes where cid in (select cid from Takes where username=?)", [username]):
+            grades.append(grade)
     else:
-        # query of getting all the grades of the student
-        query = "select * from Grades where username='%s'" % (session['user']['username'])
-    for grade in query_db(query):
-        grades.append(grade)
+        # getting all the grades of the student
+        for grade in query_db("select * from Grades where username=?", [username]):
+            grades.append(grade)
     db.close()
     return grades
 
@@ -41,9 +42,11 @@ def get_student_table():
     db=get_db()
     db.row_factory = make_dicts
     students=[]
-    for i in query_db("select distinct username from Takes natural join Users where type=0 and cid in (select cid from Takes where username='%s')" % (session['user']['username'])):
+    username=session['user']['username']
+    for i in query_db("select distinct username from Takes natural join Users where type=0 and cid in (select cid from Takes where username=?)", [username]):
         students.append(i)
     return students
+
 def get_event_table():
     db=get_db()
     db.row_factory = make_dicts
@@ -56,22 +59,22 @@ def grade_changes(student,event,grade):
     user=session['user']['username']
     db=get_db()
     db.row_factory = make_dicts
-    grades=query_db("select * from Grades where username='%s' and ename='%s'" % (student,event),one=True)
+    grades=query_db("select * from Grades where username=? and ename=?",[student,event],one=True)
     if not grades:
         # grade(student,event) does not exist
         # insert event to Events(ename) if not exist
-        query_db("insert into Events(ename) select '%s' where not exists(select 1 from Events where ename='%s')" % (event,event))
+        query_db("insert into Events(ename) select ? where not exists(select 1 from Events where ename=?)", [event,event])
         db.commit()
         # insert value(student,event,grade,0) into Events(username,ename,grade,remark)
-        query_db("insert into Grades(username,ename,grade,remark) values('%s','%s',%s,0)" % (student,event,grade)) 
+        query_db("insert into Grades(username,ename,grade,remark) values(?,?,?,0)", student,event,grade) 
     else:
         # grade(student,event) exist, update existing row.
         if grades['remark'] == 1:
             # if the student is requesting a remark for that grade, set the remark status to 'remarked'
             grades['remark'] = -1
-        query_db("update Grades set remark=%d, grade=%s where ename='%s' and username='%s'" % (grades['remark'],grade,event,student))
+        remark=grades['remark']
+        query_db("update Grades set remark=?, grade=? where ename=? and username=?", [remark,grade,event,student])
     db.commit()
-
 
 # tells Flask that "this" is the current running app
 app = Flask(__name__)
@@ -144,8 +147,6 @@ def signup():
         curr_ps = request.form['password']
         curr_class = request.form.getlist('check')
         if(query_db('select username from Users where username=?', [curr_username], one=True) == None): #and #sql_uid == None):
-            #insert our new User info:
-            #print(sql_uid)
             query_db('INSERT INTO Users (username,first_name,last_name,password,email,type) VALUES (?,?,?,?,?,?)',[curr_username, curr_f_name, curr_l_name, curr_ps, curr_email, curr_type])
             for item in curr_class:
                 query_db('INSERT INTO Takes(username,cid) values(?,?)',[curr_username,item])
@@ -187,14 +188,11 @@ def search_grade():
         student=request.args.get('search-student')
         event=request.args.get('search-event')
         grade=request.args.get('search-grade')
-        query="select distinct username, grade, remark, ename,request from Grades natural join Takes natural join Events where ename='%s' and cid in (select cid from Takes where username='%s')" % (event,session['user']['username'])
-        if grade:
-            query += " and grade=%s" % (grade)
-        if student:
-            query += " and username='%s'" % (student)
+        username=session['user']['username']
         grades=[]
-        for i in query_db(query):
-            grades.append(i)
+        for i in query_db("select distinct username, grade, remark, ename,request from Grades natural join Takes natural join Events where ename=? and cid in (select cid from Takes where username=?)",[event,username]):
+            if (not (grade and int(grade) != i['grade'])) and (not (student and student != i['username'])):
+                grades.append(i)
         db.close()
         return render_template('grade_i.html',event=events,user=session['user'],grade=grades,student=students)
     else:
@@ -255,7 +253,8 @@ def remark_sort():
     db=get_db()
     db.row_factory = make_dicts
     grades=[]
-    for grade in query_db("select distinct username, grade, remark, ename,request from Grades natural join Takes where remark=1 and cid in (select cid from Takes where username='%s')" % (session['user']['username'])):
+    username=session['user']['username']
+    for grade in query_db("select distinct username, grade, remark, ename,request from Grades natural join Takes where remark=1 and cid in (select cid from Takes where username=?)", [username]):
         grades.append(grade)
     students=get_student_table()
     events=get_event_table()
