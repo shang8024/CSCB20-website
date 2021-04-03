@@ -101,9 +101,13 @@ def login():
         if user == None:
             error = 'Invalid username'
         elif login_pass == user['password']:
+            data= {
+                'first_name': user['first_name'],
+                'last_name': user['last_name']
+            }
             session['user'] = {
                 'username': user['username'],
-                'name': [user['first_name'],user['last_name']],
+                'name': data,
                 'type': user['type'],
                 'email': user['email']
             }
@@ -316,11 +320,11 @@ def setting():
                 db.execute('UPDATE Users SET password = ? WHERE username = ?',(*[request.form['password2'], username],))
                 error[0] = 'Reset Successfully!'
         if 'first_name' in request.form:
-            session['user']['name'][0] = request.form['first_name']
+            session['user']['name']['first_name'] = request.form['first_name']
             db.execute('UPDATE Users SET first_name = ? WHERE username = ?',(*[request.form['first_name'], username],))
             error[1] = 'Reset Successfully!'
         if 'last_name' in request.form:
-            session['user']['name'][1] = request.form['last_name']
+            session['user']['name']['last_name'] = request.form['last_name']
             db.execute('UPDATE Users SET last_name = ? WHERE username = ?',(*[request.form['last_name'], username],))
             error[2] = 'Reset Successfully!'
         if 'email' in request.form:
