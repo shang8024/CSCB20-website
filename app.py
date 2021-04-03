@@ -39,6 +39,7 @@ def get_grade_table():
     return grades
 
 def get_student_table():
+    # return usernames of students who are in the same class with the current user(instructor).
     db=get_db()
     db.row_factory = make_dicts
     students=[]
@@ -48,10 +49,11 @@ def get_student_table():
     return students
 
 def get_event_table():
+    # get all enames from Grades table
     db=get_db()
     db.row_factory = make_dicts
     events=[]
-    for j in query_db('select * from Events'):
+    for j in query_db('select distinct ename from Grades'):
         events.append(j)
     return events
 
@@ -62,10 +64,7 @@ def grade_changes(student,event,grade):
     grades=query_db("select * from Grades where username=? and ename=?",[student,event],one=True)
     if not grades:
         # grade(student,event) does not exist
-        # insert event to Events(ename) if not exist
-        query_db("insert into Events(ename) select ? where not exists(select 1 from Events where ename=?)", [event,event])
-        db.commit()
-        # insert value(student,event,grade,0) into Events(username,ename,grade,remark)
+        # insert value(student,event,grade,0) into Grades(username,ename,grade,remark)
         query_db("insert into Grades(username,ename,grade,remark) values(?,?,?,0)", [student,event,grade]) 
     else:
         # grade(student,event) exist, update existing row.
@@ -74,6 +73,7 @@ def grade_changes(student,event,grade):
             grades['remark'] = -1
         remark=grades['remark']
         query_db("update Grades set remark=?, grade=? where ename=? and username=?", [remark,grade,event,student])
+    # commit change
     db.commit()
 
 # tells Flask that "this" is the current running app
@@ -90,20 +90,26 @@ def home():
     if not 'user' in session:
         return render_template('login.html',)
     else:
+        # if logged in, render index.html
+        # if not, back to login.html
         return render_template('index.html',user=session['user'])
 
 @app.route('/login', methods=['GET','POST'])
 def login():
     error = None
     if request.method=='POST':
+        # when user submited, receive input values
         login_name = request.form['username']
         login_pass = request.form['password']
         db=get_db()
         db.row_factory = make_dicts
+        # search for Users row with the input username
         user = query_db('select * from Users where username=?',[login_name],one=True)
         if user == None:
+            # error if username not in Users table
             error = 'Invalid username'
         elif login_pass == user['password']:
+            # if password matches the username, save user info to session and render index.html
             data= {
                 'first_name': user['first_name'],
                 'last_name': user['last_name']
@@ -116,13 +122,17 @@ def login():
             }
             return redirect(url_for('home'))
         else:
+            # error if password incorrect
             error = 'Invalid password'
     elif 'user' in session:
+        # if logged in, render index.html
         return redirect(url_for('home'))
+    # return login.html with error messages
     return render_template('login.html',error=error)
 
 @app.route('/logout')
 def logout():
+    # clean user infos saved in session, return to login.html
     session.pop('user',None)
     return redirect(url_for('home'))
 
@@ -164,23 +174,28 @@ def signup():
 @app.route("/grade",methods=['GET','POST'])
 def grade():
     if not 'user' in session:
+    # if not logged in, back to login
         return redirect(url_for('home'))
     db=get_db()
     db.row_factory = make_dicts
     if session['user']['type']:
+        # if current user is instructor, send user info, students grades of his/her, all enames in db, all hi/her students' usernames to grade_i.html
         students=get_student_table()
         events=get_event_table()
         grades = get_grade_table()
         return render_template('grade_i.html',event=events,user=session['user'],grade=grades,student=students)
     else:
+        # if current user is student, send user info, his/her grades to grade_s.html 
         grades = get_grade_table()
         return render_template('grade_s.html',user=session['user'],grade=grades)
 
 @app.route("/search-grade",methods=['GET','POST'])
 def search_grade():
     if not 'user' in session:
+        # if not logged in, back to login
         return redirect(url_for('home'))
     if request.method == 'GET':
+        # if user searched for something
         db=get_db()
         db.row_factory = make_dicts
         students=get_student_table()
@@ -190,17 +205,21 @@ def search_grade():
         grade=request.args.get('search-grade')
         username=session['user']['username']
         grades=[]
-        for i in query_db("select distinct username, grade, remark, ename,request from Grades natural join Takes natural join Events where cid in (select cid from Takes where username=?)",[username]):
+        # for all student's grade of the user's classes, only append grades that match the filters(inputs) to the grades list
+        for i in query_db("select distinct username, grade, remark, ename,request from Grades natural join Takes where cid in (select cid from Takes where username=?)",[username]):
             if (not (grade and int(grade) != i['grade'])) and (student in i['username']) and (not (event and event != i['ename'])):
                 grades.append(i)
         db.close()
+        # also, send user info, enames,grades,students'usernames of user's classes to grade_i.html
         return render_template('grade_i.html',event=events,user=session['user'],grade=grades,student=students)
     else:
+        # if not, normal grade page
         return redirect(url_for('grade'))
 
 @app.route("/grade-remark",methods=['GET','POST'])
 def request_remark():
     if not 'user' in session:
+        # if not logged in, back to login
         return redirect(url_for('home'))
     else:
         db=get_db()
@@ -208,7 +227,7 @@ def request_remark():
         remark_req = request.form['remark_request']
         remark_eve = request.form['remark_event']
         user=session['user']['username']
-        # if student request a remark, set remark status as 1
+        # if student request a remark, set remark status as 1 and update request
         query_db("update Grades set remark=?, request=? where username=? and ename=?",[1,remark_req,user,remark_eve])
         db.commit()
         db.close()
@@ -217,48 +236,56 @@ def request_remark():
 @app.route("/grading",methods=['GET','POST'])
 def grading():
     if not 'user' in session:
+        # if not logged in, back to login
         return redirect(url_for('home'))
     if request.method == 'POST':
         # if instructor submit temp changes
         # update evey grade change in list received from java
         db=get_db()
         db.row_factory = make_dicts
+        # get a list of grades from java
         changes = request.json['changes']
+        # for each grade in the list, apply change to Grade db
         for item in changes:
             grade_changes(item['username'],item['ename'],item['grade'])
         db.commit()
         db.close()
-    #No, it won't actually rerender the page, since it is called by java, just for safety thought
+    #No, it won't actually rerender the page, since it is called by java, return is just for safety thought
     return redirect(url_for('grade'))
 
 @app.route("/deleting",methods=['GET','POST'])
 def deleting():
     if not 'user' in session:
+        # if not logged in, back to login
         return redirect(url_for('home'))
     if request.method == 'POST':
         db=get_db()
         db.row_factory = make_dicts
         username=request.json['username']
         ename=request.json['ename']
+        # delete Grades row with username,ename received from java 
         query_db('delete from Grades where username=? and ename=?',[username,ename])
         db.commit()
         db.close()
-    #No, it won't actually rerender the page, since it is called by java,just for safety thought
+    #No, it won't actually rerender the page, since it is called by java, return is just for safety thought
     return redirect(url_for('grade'))
 
 @app.route("/remark-sort")
 def remark_sort():
     if not 'user' in session:
+        # if not logged in, back to login
         return redirect(url_for('home'))
     db=get_db()
     db.row_factory = make_dicts
     grades=[]
     username=session['user']['username']
+    # get all grades that remark status==1 from Grades table
     for grade in query_db("select distinct username, grade, remark, ename,request from Grades natural join Takes where remark=1 and cid in (select cid from Takes where username=?)", [username]):
         grades.append(grade)
     students=get_student_table()
     events=get_event_table()
     db.close()
+    # rerender the grade_i.html with grades with remark status == 1
     return render_template('grade_i.html',user=session['user'],grade=grades,student=students,event=events)
 
 @app.route('/feedback',methods=['GET', 'POST'])
