@@ -73,9 +73,10 @@
                 remarked
               {% else %}
                 <form method="post" action="/grade-remark">
-                    <input type="text" class="remark-content" value="" placeholder="Put your reason for remark here." name="remark_request">
+                    <input type="text" class="remark-content" maxlength="255" value="" placeholder="Put your reason for remark here." name="remark_request">
                     <input type="submit" value ="remark">
                     <input type="hidden" name="remark_event" value="{{ item['ename'] }}">
+                </form>
               {% endif %}
               </div>
           </div>
