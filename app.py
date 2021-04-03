@@ -156,6 +156,15 @@ def signup():
         curr_type = request.form['type']
         curr_ps = request.form['password']
         curr_class = request.form.getlist('check')
+        if(len(curr_username) < 5):
+            error = "Username too short, must between 5 to 20 characters!"
+            return render_template('signup.html',class_list=classes, error = error)
+        if(len(curr_ps) < 4):
+            error = "Password too short! must between 4 to 18 chacters!"
+            return render_template('signup.html',class_list=classes, error = error)
+        if(curr_email.find('@') == -1):#not find @:
+            error = "Invliad Email address, Must contain '@' Please enter another one"
+            return render_template('signup.html',class_list=classes, error = error)
         if(query_db('select username from Users where username=?', [curr_username], one=True) == None): #and #sql_uid == None):
             query_db('INSERT INTO Users (username,first_name,last_name,password,email,type) VALUES (?,?,?,?,?,?)',[curr_username, curr_f_name, curr_l_name, curr_ps, curr_email, curr_type])
             for item in curr_class:
