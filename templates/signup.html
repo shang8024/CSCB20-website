@@ -38,15 +38,13 @@
             </div> 
             <div class="checkboxgroup">
               <p>Class:</p>
-              <input type="checkbox" id="Lec01" name="Lec01" value="1">
-              <label for="Lec01"> Lec 01</label><br>
-              <input type="checkbox" id="Lec02" name="Lec02" value="2">
-              <label for="Lec 02">Lec 02</label><br>
-              <input type="checkbox" id="Lec03" name="Lec03" value="3">
-              <label for="Lec 03">Lec 03</label><br>
-              <input type="submit" name="submit-button" value="Register">
-              <input type="submit" name="return" value="Return To Login">   
-            </div>   
+              {% for item in class_list %}
+                <input type="checkbox" id="{{ item['cname'] }}" name="check" value="{{ item['cid'] }}">
+                <label for="{{ item['cname'] }}">{{ item['cname'] }}</label><br>
+              {% endfor %}
+            </div>  
+            <input type="submit" name="submit-button" value="Register">
+            <input type="submit" name="return" value="Return To Login">     
             {% if error %}
               <p class=error><strong></strong> {{ error }}
             {% endif %}
