@@ -334,7 +334,7 @@
       let changeGrade=[];
       let ch = document.getElementById(`span-${i}`);
       let grad = ch.innerHTML; 
-      if (grad.length >= 2 && grad !="100"){
+      if (grad.length >= 3 && grad !="100"){
         mes.innerHTML=`The grade you enter not in the range 0~100`;
         ch.innerHTML="100";
         grad="100";
