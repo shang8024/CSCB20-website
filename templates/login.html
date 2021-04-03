@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>CSCB63 Design and Analysis of Data Structures</title>
+<link href="../static/style.css" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+  <nav> 
+    <!--menu title, change position and font size when it becomes a dropdown menu-->
+    <div id="menu-title"><strong>CSCB63</strong> - Design and Analysis of Data Structures</div>
+  </nav>
+  <div class="content">
+    <!-- content for the title, center at the begining of the page but won't stick at the top when scrolling as the header-->
+    <div class="title">
+      <h1>CSCB63</h1>
+      <p>Design and Analysis of Data Structures</p>
+    </div>
+    <section class="login">
+      <form action="/login" method="POST">
+        <div class="login-screen">
+          <div class="app-title">
+            <h2>Login</h2>
+          </div>
+          {% if error %}
+            <p class=error><strong>Error:</strong> {{ error }}
+          {% endif %}
+          <div class="login-form">
+            <div class="control-group">
+              <input type="text" class="login-field" value="" placeholder="username" name="username">
+              <label class="login-field-icon fui-user" for="login-name"></label>
+            </div>
+            <div class="control-group">
+              <input type="password" class="login-field" value="" placeholder="password" name="password">
+              <label class="login-field-icon fui-lock" for="login-pass"></label>
+            </div>
+            <input type="submit" value="Log in" class="btn btn-primary btn-large btn-block">
+          </div>
+        </div>
+      </form>
+      <a href="{{ url_for('signup') }}"><button>Sign Up</button></a>
+    </section>
+  </div>
+  <div id="footer">
+    <p><a href="http://web.cs.toronto.edu">Faculty of Computer Science at UofT</a></p>
+    <p>Site designed by <strong>Jiale Shang</strong> & <strong>Zechen Lai</strong> & <strong>Feilong Qiu</strong></p>
+  </div>
+</body>
+</html>
