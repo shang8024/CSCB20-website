@@ -85,9 +85,9 @@ def close_connection(exception):
 @app.route('/')
 def home():
     if not 'user' in session:
-        return render_template('index.html',)
+        return render_template('login.html',)
     else:
-        return render_template('home.html',user=session['user'])
+        return render_template('index.html',user=session['user'])
 
 @app.route('/login', methods=['GET','POST'])
 def login():
@@ -112,7 +112,7 @@ def login():
             error = 'Invalid password'
     elif 'user' in session:
         return redirect(url_for('home'))
-    return render_template('index.html',error=error)
+    return render_template('login.html',error=error)
 
 @app.route('/logout')
 def logout():
@@ -125,7 +125,7 @@ def signup():
     db.row_factory = make_dicts
     error = None
     if('return' in request.form):
-        return render_template('index.html')
+        return render_template('login.html')
     classes=[]
     for item in query_db('select * from Classes'):
         classes.append(item)
@@ -139,9 +139,7 @@ def signup():
         curr_type = request.form['type']
         curr_ps = request.form['password']
         curr_class = request.form.getlist('check')
-        sql_username = query_db('select username from Users where username=?', [curr_username], one=True)
-        #sql_uid = query_db('select username from Users where utorid=?', [curr_utorid], one=True)
-        if(sql_username == None): #and #sql_uid == None):
+        if(query_db('select username from Users where username=?', [curr_username], one=True) == None): #and #sql_uid == None):
             #insert our new User info:
             #print(sql_uid)
             query_db('INSERT INTO Users (username,first_name,last_name,password,email,type) VALUES (?,?,?,?,?,?)',[curr_username, curr_f_name, curr_l_name, curr_ps, curr_email, curr_type])
