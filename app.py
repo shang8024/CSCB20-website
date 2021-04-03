@@ -26,9 +26,9 @@ def get_grade_table():
     db=get_db()
     db.row_factory = make_dicts
     grades=[]
-    if(session['user']['type']):
+    if session['user']['type']:
         # query of getting all the students' grades of the instroctor's classes
-        query = "select username, grade, remark, ename,request from Grades natural join Takes where cid in (select cid from Takes where username='%s')" % (session['user']['username'])
+        query = "select distinct username, grade, remark, ename,request from Grades natural join Takes where cid in (select cid from Takes where username='%s')" % (session['user']['username'])
     else:
         # query of getting all the grades of the student
         query = "select * from Grades where username='%s'" % (session['user']['username'])
@@ -41,7 +41,7 @@ def get_student_table():
     db=get_db()
     db.row_factory = make_dicts
     students=[]
-    for i in query_db("select username from Takes natural join Users where type=0 and cid in (select cid from Takes where username='%s')" % (session['user']['username'])):
+    for i in query_db("select distinct username from Takes natural join Users where type=0 and cid in (select cid from Takes where username='%s')" % (session['user']['username'])):
         students.append(i)
     return students
 def get_event_table():
@@ -173,10 +173,14 @@ def grade():
         return redirect(url_for('home'))
     db=get_db()
     db.row_factory = make_dicts
-    students=get_student_table()
-    events=get_event_table()
-    grades = get_grade_table()
-    return render_template('grade.html',event=events,user=session['user'],grade=grades,student=students)
+    if session['user']['type']:
+        students=get_student_table()
+        events=get_event_table()
+        grades = get_grade_table()
+        return render_template('grade_i.html',event=events,user=session['user'],grade=grades,student=students)
+    else:
+        grades = get_grade_table()
+        return render_template('grade_s.html',user=session['user'])
 
 @app.route("/search-grade",methods=['GET','POST'])
 def search_grade():
@@ -190,7 +194,7 @@ def search_grade():
         student=request.args.get('search-student')
         event=request.args.get('search-event')
         grade=request.args.get('search-grade')
-        query="select username, grade, remark, ename,request from Grades natural join Takes natural join Events where ename='%s' and cid in (select cid from Takes where username='%s')" % (event,session['user']['username'])
+        query="select distinct username, grade, remark, ename,request from Grades natural join Takes natural join Events where ename='%s' and cid in (select cid from Takes where username='%s')" % (event,session['user']['username'])
         if grade:
             query += " and grade=%s" % (grade)
         if student:
@@ -199,7 +203,7 @@ def search_grade():
         for i in query_db(query):
             grades.append(i)
         db.close()
-        return render_template('grade.html',event=events,user=session['user'],grade=grades,student=students)
+        return render_template('grade_i.html',event=events,user=session['user'],grade=grades,student=students)
     else:
         return redirect(url_for('grade'))
 
@@ -263,7 +267,7 @@ def remark_sort():
     students=get_student_table()
     events=get_event_table()
     db.close()
-    return render_template('grade.html',user=session['user'],grade=grades,student=students,event=events)
+    return render_template('grade_i.html',user=session['user'],grade=grades,student=students,event=events)
 
 @app.route('/feedback',methods=['GET', 'POST'])
 def feedback():
