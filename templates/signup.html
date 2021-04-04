@@ -27,14 +27,14 @@
             <br>
             <div class="input_box">
               <label for="email_box">Email:</label>
-              <input id = "email_box"  type="text" name="email" placeholder = "Email"> <br>
+              <input id = "email_box" maxlength="255" type="text" name="email" placeholder = "Email"> <br>
               <label for="username_box">Username:</label>
-              <input id = "username_box"  type="text" name="username" placeholder = "Username"><br>
+              <input id = "username_box" minlength="6" maxlength="20" type="text" name="username" placeholder = "Username"><br>
               <label for="first_name_box">Name:</label>
-              <input id = "first_name_box"  type="text" name="first_name" placeholder = "First Name">
-              <input id = "last_name_box"  type="text" name="last_name" placeholder = "Last Name"><br>
+              <input id = "first_name_box" minlength="1" maxlength="255" type="text" name="first_name" placeholder = "First Name">
+              <input id = "last_name_box" minlength="1" maxlength="255" type="text" name="last_name" placeholder = "Last Name"><br>
               <label for="password_box">Password:</label>
-              <input id = "password_box"  type="password" name="password" placeholder = "Password">
+              <input id = "password_box" minlength="6" maxlength="18" type="password" name="password" placeholder = "Password">
             </div> 
             <div class="checkboxgroup">
               <p>Class:</p>
