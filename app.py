@@ -333,13 +333,15 @@ def feedback():
 @app.route('/setting',methods=['GET', 'POST'])
 def setting():
     if not 'user' in session:
+    # if not logged in, back to login
         return redirect(url_for('home'))
     error = ['','','','']
     db = get_db()
     db.row_factory = make_dicts
     username=session['user']['username']
+    LEC = query_db('SELECT cid FROM Takes WHERE username == ?',[username])[0]['cid']
     if request.method == 'POST':
-        #return request.form.__str__()
+        #check whether the key in included in the request.form to make sure which form is submitted.
         if 'password2' in request.form:
             error[0] = 'The two password are inconsistent!'
             if request.form['password1'] == request.form['password2']:
@@ -355,6 +357,7 @@ def setting():
             error[2] = 'Reset Successfully!'
         if 'email' in request.form:
             if request.form['email'] == 'None' or request.form['email'] == '':
+            #if the student submit 'None' or nothing in the email form, then delete email in the database
                 session['user']['email'] = 'None'
                 db.execute('UPDATE Users SET email = NULL WHERE username = ?',(*[username],))
                 error[3] = 'Email Deleted Successfully!'
@@ -364,7 +367,7 @@ def setting():
                 error[3] = 'Reset Successfully!'
     db.commit()
     db.close
-    return render_template('setting.html',user=session['user'],error = error)
+    return render_template('setting.html',user=session['user'],error = error,LEC=LEC)
 
 @app.route('/labs')
 def labs():
