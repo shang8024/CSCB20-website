@@ -295,45 +295,41 @@ def remark_sort():
 @app.route('/feedback',methods=['GET', 'POST'])
 def feedback():
     if not 'user' in session:
+    # if not logged in, back to login
         return redirect(url_for('home'))
     db = get_db()
     db.row_factory = make_dicts
-    name=session['user']['username']
+    name = session['user']['username']
     if session['user']['type']:
+    #if the user is logged in as a instructor, get to the feedback page for instructor.
         feedbacks=[]
         for item in query_db('select qname,ans from Feedback natural join Questions where username=?',[name]):
             feedbacks.append(item)
         db.close
-        #return feedbacks.__str__()
         return render_template('feedback_i.html',user=session['user'],feedback = feedbacks)
     else:
-        instructors=[]
+    #if the user is logged in as a student, get to the feedback page for student.
+        instructors = []
+        questions = []
         submit = ''
         for instructor in query_db('SELECT* FROM Users WHERE type == 1'):
             instructors.append(instructor)
+        for question in query_db('SELECT* FROM Questions'):
+            questions.append(question)
         if request.method=='POST':
             submit = 'Please do not submit everything empty!'
-            if request.form['q1'] != '':
-                insert_data = [request.form['iuser'],request.form['q1']]
-                db.execute('INSERT INTO Feedback (username,qid,ans) VALUES (?,1,?)',(*insert_data,))
-                submit = 'Submitted Successfully!'
-            if request.form['q2'] != '':
-                insert_data = [request.form['iuser'],request.form['q2']]
-                db.execute('INSERT INTO Feedback (username,qid,ans) VALUES (?,2,?)',(*insert_data,))
-                submit = 'Submitted Successfully!'
-            if request.form['q3'] != '':
-                insert_data = [request.form['iuser'],request.form['q3']]
-                db.execute('INSERT INTO Feedback (username,qid,ans) VALUES (?,3,?)',(*insert_data,))
-                submit = 'Submitted Successfully!'
-            if request.form['q4'] != '':
-                insert_data = [request.form['iuser'],request.form['q4']]
-                db.execute('INSERT INTO Feedback (username,qid,ans) VALUES (?,4,?)',(*insert_data,))
-                submit = 'Submitted Successfully!'
+            for question in questions:
+            #for each question, check if the student has answered it.
+                answer = request.form[str(question['qid'])]
+                if answer != '':
+                    #if the student has filled something in the textarea, upload it into the database.
+                    insert_data = [request.form['iuser'],question['qid'],answer]
+                    db.execute('INSERT INTO Feedback (username,qid,ans) VALUES (?,?,?)',(*insert_data,))
+                    submit = 'Submitted Successfully!'
         db.commit()
         db.close
-        #return instructors.__str__()
-        return render_template('feedback_s.html',user=session['user'],instructor = instructors,submit = submit)
-
+        return render_template('feedback_s.html',user = session['user'],instructor = instructors,submit = submit,questions = questions)
+    
 @app.route('/setting',methods=['GET', 'POST'])
 def setting():
     if not 'user' in session:
