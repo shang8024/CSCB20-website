@@ -99,6 +99,8 @@ def home():
 def login():
     error = None
     if request.method=='POST':
+        if 'signup' in request.form:
+            return redirect(url_for('signup'))
         # when user submited, receive input values
         login_name = request.form['username']
         login_pass = request.form['password']
@@ -142,7 +144,7 @@ def signup():
     db = get_db()
     db.row_factory = make_dicts
     error = None
-    if('return' in request.form):
+    if 'return' in request.form:
         return redirect(url_for('login'))
     classes=[]
     for item in query_db('select * from Classes'):
