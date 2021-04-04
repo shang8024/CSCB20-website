@@ -7,7 +7,6 @@ body {
 	word-wrap:break-word !important;
 }
 
-
 a:hover{
 	color: #b5c4b1;
 }
@@ -22,7 +21,31 @@ h1 {
 	font-size:60px;
 	line-height: 70px;
 }
-
+.login-form {
+	margin:auto;
+	padding: 10px;
+	align-items: center;
+}
+.login-title{
+	align-items: center;
+}
+.login-screen{
+	float: left;
+	margin: auto;
+	width:50%;
+	align-items: center;
+	padding: 0 30px;
+}
+.login{
+	width: 300px;
+	margin: auto;
+	margin-bottom: 20px;
+	align-items: center;
+}
+.logo{
+	text-align: center;
+	display: block;
+}
 .content{
 	width: 85%;
 	margin: 0 auto;
@@ -166,6 +189,7 @@ nav ul ul a:hover {
     display: table-cell;
     padding: 5px;
 }
+
 /*-----------------checked box for "Test"------*/
 /*hide the inputs/checkmarks and submenu*/
 .test-menu ul, .test-menu input, .test-menu .closer, .test-menu input:checked ~ .opener{
