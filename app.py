@@ -78,6 +78,7 @@ def grade_changes(student,event,grade):
 
 # tells Flask that "this" is the current running app
 app = Flask(__name__)
+app.secret_key = os.urandom(12)
 
 @app.teardown_appcontext
 def close_connection(exception):
