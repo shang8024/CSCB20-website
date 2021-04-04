@@ -4,7 +4,6 @@ from flask import Flask
 from flask import Flask, jsonify,render_template, request, g, flash, redirect,session, url_for,abort
 import os
 
-app.secret_key = os.urandom(12)
 DATABASE='./assignment3.db'
 
 def get_db():
@@ -143,13 +142,11 @@ def signup():
     db.row_factory = make_dicts
     error = None
     if('return' in request.form):
-        return render_template('login.html')
+        return redirect(url_for('login'))
     classes=[]
     for item in query_db('select * from Classes'):
         classes.append(item)
-    if(error == None and request.method != 'POST'):
-        return render_template('signup.html',class_list=classes)
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'first_name' in request.form and 'last_name' in request.form and 'type' in request.form and 'email' in request.form and 'check' in request.form:
+    if request.method == 'POST':
         curr_username = request.form['username']
         curr_f_name = request.form['first_name']
         curr_l_name = request.form['last_name']
@@ -157,23 +154,23 @@ def signup():
         curr_type = request.form['type']
         curr_ps = request.form['password']
         curr_class = request.form.getlist('check')
-        if(curr_email.find('@') == -1):#not find @:
-            error = "Invliad Email address, Must contain '@' Please enter another one"
-            return render_template('signup.html',class_list=classes, error = error)
-        if(query_db('select username from Users where username=?', [curr_username], one=True) == None): #and #sql_uid == None):
-            query_db('INSERT INTO Users (username,first_name,last_name,password,email,type) VALUES (?,?,?,?,?,?)',[curr_username, curr_f_name, curr_l_name, curr_ps, curr_email, curr_type])
-            for item in curr_class:
-                query_db('INSERT INTO Takes(username,cid) values(?,?)',[curr_username,item])
-            db.commit()
-            db.close()
-            error = "Register successful!"
-            return render_template('signup.html',class_list=classes, error = error)
+        if curr_username and curr_f_name and curr_l_name and curr_type and curr_ps and curr_class:
+            if not query_db('select username from Users where username=?', [curr_username], one=True): #and #sql_uid == None):
+                query_db('INSERT INTO Users (username,first_name,last_name,password,type) VALUES (?,?,?,?,?)',[curr_username, curr_f_name, curr_l_name, curr_ps, curr_type])
+                for item in curr_class:
+                    query_db('INSERT INTO Takes(username,cid) values(?,?)',[curr_username,item])
+                error = "Register successful!"
+                if curr_email and ("@" in curr_email):
+                    query_db('update Users set email=? where username=?',[curr_email,curr_username])
+                elif curr_email and (not "@" in curr_email):
+                    error = error + " But setting email failed since email should contain '@'!"
+                db.commit()
+            else:
+                error = 'Username exists!!!!! Try again!'
         else:
-            error = 'Username exists!!!!! Try again!'
-            return render_template('signup.html',class_list=classes, error = error)
-    else:
-        error = 'Please Fill-in EVERY field to register'
-        return render_template('signup.html',class_list=classes,error = error)
+            error = 'Please Fill-in EVERY field to register'
+    db.close()
+    return render_template('signup.html',class_list=classes,error=error)
 
 @app.route("/grade",methods=['GET','POST'])
 def grade():
@@ -383,4 +380,5 @@ def lectures():
     return render_template('lectures.html',user=session['user'])
 
 if __name__ == "__main__":
+    app.secret_key = os.urandom(12)
     app.run(debug=True)
