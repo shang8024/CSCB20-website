@@ -20,27 +20,20 @@
     <section class="login">
       <form action="/login" method="POST">
         <div class="login-screen">
-          <div class="app-title">
-            <h2>Login</h2>
-          </div>
+          <div class="login-title"><h2>Login</h2></div>
           {% if error %}
             <p class=error><strong>Error:</strong> {{ error }}
           {% endif %}
           <div class="login-form">
-            <div class="control-group">
-              <input type="text" maxlength="20" class="login-field" value="" placeholder="username" name="username">
-              <label class="login-field-icon fui-user" for="login-name"></label>
-            </div>
-            <div class="control-group">
-              <input type="password" maxlength="18" class="login-field" value="" placeholder="password" name="password">
-              <label class="login-field-icon fui-lock" for="login-pass"></label>
-            </div>
-            <input type="submit" value="Log in" class="btn btn-primary btn-large btn-block">
+            <input id="login-name" type="text" maxlength="20" class="login-field" value="" placeholder="username" name="username"><br>
+            <input id="login-pass" type="password" maxlength="18" class="login-field" value="" placeholder="password" name="password"><br>
+            <input type="submit" name="login" value="Log in" class="btn btn-primary btn-large btn-block">
+            <input type="submit" name="signup" value="Sign up">
           </div>
         </div>
       </form>
-      <a href="{{ url_for('signup') }}"><button>Sign Up</button></a>
     </section>
+    <div class="logo"><img width=80% src="../static/UofT-logo.png"></div>
   </div>
   <div id="footer">
     <p><a href="http://web.cs.toronto.edu">Faculty of Computer Science at UofT</a></p>
