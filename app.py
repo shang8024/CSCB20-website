@@ -4,6 +4,7 @@ from flask import Flask
 from flask import Flask, jsonify,render_template, request, g, flash, redirect,session, url_for,abort
 import os
 
+app.secret_key = os.urandom(12)
 DATABASE='./assignment3.db'
 
 def get_db():
@@ -156,12 +157,6 @@ def signup():
         curr_type = request.form['type']
         curr_ps = request.form['password']
         curr_class = request.form.getlist('check')
-        if(len(curr_username) < 5):
-            error = "Username too short, must between 5 to 20 characters!"
-            return render_template('signup.html',class_list=classes, error = error)
-        if(len(curr_ps) < 4):
-            error = "Password too short! must between 4 to 18 chacters!"
-            return render_template('signup.html',class_list=classes, error = error)
         if(curr_email.find('@') == -1):#not find @:
             error = "Invliad Email address, Must contain '@' Please enter another one"
             return render_template('signup.html',class_list=classes, error = error)
@@ -388,5 +383,4 @@ def lectures():
     return render_template('lectures.html',user=session['user'])
 
 if __name__ == "__main__":
-    app.secret_key = os.urandom(12)
     app.run(debug=True)
