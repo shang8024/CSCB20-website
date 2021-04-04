@@ -6,23 +6,7 @@ body {
 	padding: 0;
 	word-wrap:break-word !important;
 }
-.dropdown {
-	display: inline-block;
-  }
-  
-  .dropdown-content {
-	display: none;
-	position: relative;
-	background-color: #f9f9f9;
-	min-width: 160px;
-	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-	padding: 12px 16px;
-	z-index: 1;
-  }
-  
-.dropdown:hover .dropdown-content {
-	display: block;
-}
+
 
 a:hover{
 	color: #b5c4b1;
@@ -210,6 +194,27 @@ nav ul ul a:hover {
 	text-decoration: none;
 	transition: 0.4s;
 }
+
+.dropdown {
+	display: inline-block;
+  }
+  
+.dropdown-content {
+	display: none;
+	position: absolute;
+	background-color: #f9f9f9;
+	min-width: 160px;
+	max-width: 320px;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	padding: 12px 16px;
+	z-index: 1;
+}
+.dropdown span{
+	color: red;
+}
+.dropdown:hover .dropdown-content {
+	display: block;
+}
 @media all and (max-width : 1227px) {
 	#menu-title {
 		padding: 0;
@@ -331,9 +336,10 @@ nav ul ul a:hover {
 .input_box{
 	display: inline-block;
 	line-height: 42px;
+}
 /*-----------------Additional setting for large-size textarea----*/
 .large{
 	width: 95%;
 	height: 80px;
-	resize: none
+	resize: none;
 }
