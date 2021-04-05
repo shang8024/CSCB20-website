@@ -164,13 +164,10 @@ def signup():
             # update Takes(username,cid)
             for item in curr_class:
                 query_db('INSERT INTO Takes(username,cid) values(?,?)',[curr_username,item])
-            error = "Register successful!"
-            if curr_email and ("@" in curr_email):
+            error = "Registed successfully!"
+            if curr_email:
                 # if email valid, update email
                 query_db('update Users set email=? where username=?',[curr_email,curr_username])
-            elif curr_email and (not "@" in curr_email):
-                # if email not None but not valid, don't update email and sent error
-                error = error + " But setting email failed since email should contain '@'!"
             db.commit()
         else:
             # if username exists, return with error
