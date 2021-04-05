@@ -144,12 +144,13 @@ def signup():
     db = get_db()
     db.row_factory = make_dicts
     error = None
-    if 'return' in request.form:
-        return redirect(url_for('login'))
     classes=[]
+    # get class list from db
     for item in query_db('select * from Classes'):
         classes.append(item)
     if request.method == 'POST':
+        # if user submit, receive inputs
+        # (don't need to check whether inputs exists, java has alredy done that for us)
         curr_username = request.form['username']
         curr_f_name = request.form['first_name']
         curr_l_name = request.form['last_name']
@@ -157,21 +158,23 @@ def signup():
         curr_type = request.form['type']
         curr_ps = request.form['password']
         curr_class = request.form.getlist('check')
-        if curr_username and curr_f_name and curr_l_name and curr_type and curr_ps and curr_class:
-            if not query_db('select username from Users where username=?', [curr_username], one=True): #and #sql_uid == None):
-                query_db('INSERT INTO Users (username,first_name,last_name,password,type) VALUES (?,?,?,?,?)',[curr_username, curr_f_name, curr_l_name, curr_ps, curr_type])
-                for item in curr_class:
-                    query_db('INSERT INTO Takes(username,cid) values(?,?)',[curr_username,item])
-                error = "Register successful!"
-                if curr_email and ("@" in curr_email):
-                    query_db('update Users set email=? where username=?',[curr_email,curr_username])
-                elif curr_email and (not "@" in curr_email):
-                    error = error + " But setting email failed since email should contain '@'!"
-                db.commit()
-            else:
-                error = 'Username exists!!!!! Try again!'
+        if not query_db('select username from Users where username=?', [curr_username], one=True): #and #sql_uid == None):
+            # if username not exist in Users (new user), update user with name, username,password,type
+            query_db('INSERT INTO Users (username,first_name,last_name,password,type) VALUES (?,?,?,?,?)',[curr_username, curr_f_name, curr_l_name, curr_ps, curr_type])
+            # update Takes(username,cid)
+            for item in curr_class:
+                query_db('INSERT INTO Takes(username,cid) values(?,?)',[curr_username,item])
+            error = "Register successful!"
+            if curr_email and ("@" in curr_email):
+                # if email valid, update email
+                query_db('update Users set email=? where username=?',[curr_email,curr_username])
+            elif curr_email and (not "@" in curr_email):
+                # if email not None but not valid, don't update email and sent error
+                error = error + " But setting email failed since email should contain '@'!"
+            db.commit()
         else:
-            error = 'Please Fill-in EVERY field to register'
+            # if username exists, return with error
+            error = 'Username exists!!!!! Try again!'
     db.close()
     return render_template('signup.html',class_list=classes,error=error)
 
