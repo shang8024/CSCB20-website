@@ -103,7 +103,6 @@ def login():
             return redirect(url_for('signup'))
         # when user submited, receive input values
         login_name = request.form['username']
-        login_pass = request.form['password']
         db=get_db()
         db.row_factory = make_dicts
         # search for Users row with the input username
@@ -111,7 +110,7 @@ def login():
         if user == None:
             # error if username not in Users table
             error = 'Invalid username'
-        elif login_pass == user['password']:
+        elif request.form['password'] == user['password']:
             # if password matches the username, save user info to session and render index.html
             data= {
                 'first_name': user['first_name'],
