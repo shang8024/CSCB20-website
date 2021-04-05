@@ -6,7 +6,10 @@ body {
 	padding: 0;
 	word-wrap:break-word !important;
 }
-
+.grade-change-box{
+	display: flex;
+	justify-content: space-between;
+};
 a:hover{
 	color: #b5c4b1;
 }
