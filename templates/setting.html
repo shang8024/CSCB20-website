@@ -61,8 +61,8 @@
         <p>Username: <input type="text" disabled value="{{ user['username'] }}"></p>
       <!--forms for the settings that can be altered-->
         <p><form method="post">Password: <input type="password" minlength="6" maxlength="18" value = "NotAvailable" name = "password1"> <input type = "password" minlength="6" maxlength="18" required placeholder="Comfirm Password" name = "password2"> <input type = "submit" value = "Reset"> {{error[0]}}</form></p>
-        <p><form method="post">First Name: <input type="text" minlength="1" maxlength="255" required value="{{ user['name']['first_name'] }}" name = "first_name"> <input type = "submit" value = "Reset"> {{error[1]}}</form></p>
-        <p><form method="post">Last Name: <input type="text" minlength="1" maxlength="255" required value="{{ user['name']['last_name'] }}" name = "last_name"> <input type = "submit" value = "Reset"> {{error[2]}}</form></p>
+        <p><form method="post">First Name: <input type="text" maxlength="255" required value="{{ user['name']['first_name'] }}" name = "first_name"> <input type = "submit" value = "Reset"> {{error[1]}}</form></p>
+        <p><form method="post">Last Name: <input type="text" maxlength="255" required value="{{ user['name']['last_name'] }}" name = "last_name"> <input type = "submit" value = "Reset"> {{error[2]}}</form></p>
         <p><form method="post">Email: <input type="text" maxlength="255" value="{{ user['email'] }}" name = email> <input type = "submit" value = "Reset"> {{error[3]}}</form></p>
         <p>Lectrue: <input type="text" disabled value="LEC{{LEC}}"></p>
     </section>

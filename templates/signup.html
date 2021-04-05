@@ -29,31 +29,72 @@
               <label for="email_box">Email:</label>
               <input id = "email_box" maxlength="255" type="text" name="email" placeholder = "Email"> <br>
               <label for="username_box">Username:</label>
-              <input id = "username_box" minlength="6" maxlength="20" type="text" name="username" placeholder = "Username"><br>
+              <input id = "username_box" required minlength="6" maxlength="20" type="text" name="username" placeholder = "Username"><br>
               <label for="first_name_box">Name:</label>
-              <input id = "first_name_box" maxlength="255" type="text" name="first_name" placeholder = "First Name">
-              <input id = "last_name_box" maxlength="255" type="text" name="last_name" placeholder = "Last Name"><br>
+              <input id = "first_name_box" required maxlength="255" type="text" name="first_name" placeholder = "First Name">
+              <input id = "last_name_box" required maxlength="255" type="text" name="last_name" placeholder = "Last Name"><br>
               <label for="password_box">Password:</label>
-              <input id = "password_box" minlength="6" maxlength="18" type="password" name="password" placeholder = "Password">
+              <input id = "password_box" required minlength="6" maxlength="18" type="password" name="password" placeholder = "Password">
             </div> 
             <div class="checkboxgroup">
               <p>Class:</p>
               {% for item in class_list %}
-                <input type="checkbox" id="{{ item['cname'] }}" name="check" value="{{ item['cid'] }}">
+                <input type="checkbox" class="check" onclick="change_status()" required id="{{ item['cname'] }}" name="check" value="{{ item['cid'] }}">
                 <label for="{{ item['cname'] }}">{{ item['cname'] }}</label><br>
               {% endfor %}
             </div>  
-            <input type="submit" name="submit-button" value="Register">
-            <input type="submit" name="return" value="Return To Login">     
+            <p><input type="submit" name="submit-button" value="Register"> Aready have an account? <a href="{{ url_for('login') }}">Return to login.</a></p> 
             {% if error %}
               <p class=error><strong></strong> {{ error }}
             {% endif %}
         </form>
+        
     </section>
   </div>
   <div id="footer">
     <p><a href="http://web.cs.toronto.edu">Faculty of Computer Science at UofT</a></p>
     <p>Site designed by <strong>Jiale Shang</strong> & <strong>Zechen Lai</strong> & <strong>Feilong Qiu</strong></p>
   </div>
+  <script>
+    function one_check(){
+      // return true if at least one class check box is cheked, else, return false
+      let x= document.getElementsByClassName("check");
+      for (i=0;i<x.length;i++){
+        if(x[i].checked){
+          return true;
+        };
+      };
+      return false;
+    };
+    function change_status() {
+      // when a check box is clicked, remove "required" from all checkboxes, if at least a checkbox is checked
+      // else, add "required" attr to all check boxes
+      let x= document.getElementsByClassName("check");
+      isChecked = one_check();
+      for (i=0;i<x.length;i++){
+        if(isChecked){
+          console.log('1');
+          x[i].removeAttribute('required');
+        }else{
+          x[i].setAttribute('required', '');
+        };
+      };
+    };
+    document.addEventListener("DOMContentLoaded", function() {
+    // This function set the info of input chexboxes for invalid submition
+    let check = document.getElementsByClassName("check");
+    for (i = 0; i < check.length; i++) {
+        check[i].oninvalid = function(e) {
+            e.target.setCustomValidity("");
+            if (!e.target.validity.valid) {
+                e.target.setCustomValidity("Please choose at least one class.");
+            }
+        };
+        check[i].oninput = function(e) {
+            e.target.setCustomValidity("");
+        };
+    }
+})
+  </script>
 </body>
 </html>

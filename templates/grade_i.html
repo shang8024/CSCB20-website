@@ -77,14 +77,14 @@
       <!-- --------------------------------------------------------------------------// -->
       <h2>Template Changes</h2><hr>
       <label for="grading">Enter a grade of your student:</label>
-      <input list="students" maxlength="20" name="student" placeholder="username" id="student">
+      <input list="students" maxlength="20" required name="student" placeholder="username" id="student">
       <datalist id="students">
       </datalist>
       <!--input and datalist options enables instructor to enter a new event not in current table but will be inserted by flask-->
-      <input list="events" name="event" maxlength="20" placeholder="type" id="event">
+      <input list="events" name="event" maxlength="20" required placeholder="type" id="event">
       <datalist id="events">                  
       </datalist>
-      <input type="number" name="grade" placeholder="grade" min="0" max="100" id="grade">
+      <input type="number" name="grade" placeholder="grade" min="0" required max="100" id="grade">
       <!--java function to create new temp table row with inputs and render the temptable-->
       <button onclick="appendTemp()">add to Temp</button>
       <button onclick="archiveTemp()" type="float:right">submit changes</button>
