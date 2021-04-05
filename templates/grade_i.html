@@ -66,9 +66,9 @@
         <select id="search-event" name="search-event">
         </select>
         <input type="number" name="search-grade" value="" min="0" max="100" placeholder="grade">
-        <input type="submit" onclick="search()" value="search">
+        <input type="submit" value="search">
+        <a href="{{ url_for('grade') }}"><button>refresh</button></a>
       </form>
-      <a href="{{ url_for('grade') }}"><button>refresh</button></a>
       <div class="table" id="grade-table">
       </div>
     </section>
@@ -87,7 +87,7 @@
       <input type="number" name="grade" placeholder="grade" min="0" required max="100" id="grade">
       <!--java function to create new temp table row with inputs and render the temptable-->
       <button onclick="appendTemp()">add to Temp</button>
-      <button onclick="archiveTemp()" type="float:right">submit changes</button>
+      <button onclick="archiveTemp()">submit changes</button>
       <div class="table" id="temp-table">
       </div>
       <!-- --------------------------------------------------------------------------// -->
@@ -161,7 +161,12 @@
           `<div class="row">
             <div class="cell">`+name+`</div>
             <div class="cell">`+type+`</div>
-            <div class="cell"><span id="span-`+i+`" onkeypress = "return testChar(event,'`+i+`');" contenteditable="true" onblur="change_grade('`+name+`','`+type+`','`+i+`')">`+grade+`</span></div>
+            <div class="cell" id="grade-cell-`+i+`">
+              <div class="grade-change-box">
+                <span id="span-`+i+`" onkeypress = "return testChar(event,'`+i+`');" contenteditable="true">`+grade+`</span>
+                <button id="ch-`+i+`" hidden class="gd-ch-btn" onclick="change_grade('`+name+`','`+type+`','`+i+`')">change</button>  
+              </div>
+            </div>
             <div class="cell">
               `+buff+`
             </div>
@@ -262,12 +267,12 @@
         xmlDoc.setRequestHeader("Content-type","application/json");
         xmlDoc.send(JSON.stringify({changes: newGrade}));
         // clear newGrade and render all tables
+        alert(`${newGrade.length} grades changed successfully!`);
         newGrade=[];
         option_list();
         renderTemp();
         renderTable();
       };
-      
     };
     function isDataValid(name, type, grad) {
       if(name == "" || type == "" || grad == ""){
@@ -332,6 +337,7 @@
       // find the "span-i" cell
       let changeGrade=[];
       let ch = document.getElementById(`span-${i}`);
+      let ch_btn = document.getElementById(`ch-${i}`);
       let grad = parseInt(ch.innerHTML);
       // if changed value empty or not in range, not change and alert errors 
       if(!grad){
@@ -354,6 +360,7 @@
         xmlDoc.setRequestHeader("Content-type","application/json");
         xmlDoc.send(JSON.stringify({changes: changeGrade}));
         //rerender tables
+        ch_btn.setAttribute('hidden','');
         renderTemp();
         renderTable();
       };
@@ -369,7 +376,6 @@
         return false;
       }
     };
-
     //------------------------------------------------
     function option_list(){
         // print option list for datalist students,events and select search-event
@@ -416,6 +422,23 @@
     option_list();
     renderTemp();
     renderTable();
+    document.addEventListener("click",function(event){
+      //if grade cell not clicked, hid change and restore value
+      // vice versa
+      for(i=0;i<grades.length;i++){
+        let gd = document.getElementById(`grade-cell-${i}`);
+        let ch_btn = document.getElementById(`ch-${i}`);
+        let ch = document.getElementById(`span-${i}`);
+        if( gd.contains(event.target)){
+          if(ch_btn.hasAttribute('hidden')){
+            ch_btn.removeAttribute('hidden');
+          }
+        }else{
+          ch_btn.setAttribute('hidden','');
+          ch.innerHTML=grades[i]['grade'];
+        };
+      };
+    });
   </script>
 </body>
 </html>
