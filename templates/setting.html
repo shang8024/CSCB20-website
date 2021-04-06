@@ -64,7 +64,10 @@
         <p><form method="post">First Name: <input type="text" maxlength="255" required value="{{ user['name']['first_name'] }}" name = "first_name"> <input type = "submit" value = "Reset"> {{error[1]}}</form></p>
         <p><form method="post">Last Name: <input type="text" maxlength="255" required value="{{ user['name']['last_name'] }}" name = "last_name"> <input type = "submit" value = "Reset"> {{error[2]}}</form></p>
         <p><form method="post">Email: <input type="text" maxlength="255" value="{{ user['email'] }}" name = email> <input type = "submit" value = "Reset"> {{error[3]}}</form></p>
-        <p>Lectrue: <input type="text" disabled value="LEC{{LEC}}"></p>
+        <p>Classes:
+          {% for item in LEC%}
+          {{item['cname']}} 
+          {% endfor %}
     </section>
   </div>
   <!--content end-->
