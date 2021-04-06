@@ -35,7 +35,6 @@ h1 {
 .login-screen{
 	float: left;
 	margin: auto;
-	width:50%;
 	align-items: center;
 	padding: 0 30px;
 }
@@ -178,7 +177,7 @@ nav ul ul a:hover {
 	color: #656565;
 }
 /*-------------table------------*/
-/*inspired by http://www.cs.toronto.edu/~mashiyat/csc309/index.html*/
+/*----flex table-------*/
 .table{
     display: flex;
 	flex-direction: column;
@@ -186,6 +185,7 @@ nav ul ul a:hover {
 .row{
     display: flex;
 }
+/*give odd row diffrent background color*/
 .row:nth-child(odd){
 	background: #f1f1f1;
 }
@@ -202,6 +202,7 @@ nav ul ul a:hover {
 .cell:nth-child(2) {
 	flex: 2;
 }
+/*heading*/
 .row:first-child .cell {
 	display: flex;
 	font-weight: bold;
