@@ -197,8 +197,12 @@ def search_grade():
     if not 'user' in session:
         # if not logged in, back to login
         return redirect(url_for('home'))
+    elif not session['user']['type']:
+        return redirect(url_for('grade'))
     if request.method == 'GET':
         # if user searched for something
+        if 'refresh' in request.args:
+            return redirect(url_for('grade'))
         db=get_db()
         db.row_factory = make_dicts
         students=get_student_table()
@@ -224,6 +228,8 @@ def request_remark():
     if not 'user' in session:
         # if not logged in, back to login
         return redirect(url_for('home'))
+    elif session['user']['type']:
+        return redirect(url_for('grade'))
     else:
         db=get_db()
         db.row_factory = make_dicts
@@ -241,6 +247,8 @@ def grading():
     if not 'user' in session:
         # if not logged in, back to login
         return redirect(url_for('home'))
+    elif not session['user']['type']:
+        return redirect(url_for('grade'))
     if request.method == 'POST':
         # if instructor submit temp changes
         # update evey grade change in list received from java
@@ -261,6 +269,8 @@ def deleting():
     if not 'user' in session:
         # if not logged in, back to login
         return redirect(url_for('home'))
+    elif not session['user']['type']:
+        return redirect(url_for('grade'))
     if request.method == 'POST':
         db=get_db()
         db.row_factory = make_dicts
@@ -278,6 +288,8 @@ def remark_sort():
     if not 'user' in session:
         # if not logged in, back to login
         return redirect(url_for('home'))
+    elif not session['user']['type']:
+        return redirect(url_for('grade'))
     db=get_db()
     db.row_factory = make_dicts
     grades=[]
