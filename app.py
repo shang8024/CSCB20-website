@@ -338,7 +338,7 @@ def setting():
     db = get_db()
     db.row_factory = make_dicts
     username=session['user']['username']
-    LEC = query_db('SELECT cid FROM Takes WHERE username == ?',[username])[0]['cid']
+    LEC = query_db('SELECT cname FROM Takes natural join Classes WHERE username == ?',[username])
     if request.method == 'POST':
         #check whether the key in included in the request.form to make sure which form is submitted.
         if 'password2' in request.form:
